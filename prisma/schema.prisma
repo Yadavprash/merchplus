@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  name String?
+  password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userCart Cart[]
+}
+
+model Product {
+  id String @id @default(uuid())
+  name String
+  description String?
+  color String?
+  size String?
+  price Float
+  image String?
+
+  reviews     Review[] @relation("ProductReviews")
+  category   Category?  @relation(fields: [categoryid], references: [id])
+  categoryid String?
+  presentInCarts  CartItem[]
+
+  Image Image[]
+}
+
+model Image{
+  id String @id @default(uuid())
+  url String
+  productId String
+  product Product @relation(fields: [productId],references: [id])
+}
+
+model Review {
+  id         String     @id @default(uuid())
+  rating     Int
+  review     String
+  product    Product @relation("ProductReviews", fields: [productId], references: [id])
+  productId  String
+}
+
+model Category{
+  id         String     @id @default(uuid())
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  products Product[]
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String    
+  user      User    @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model CartItem {
+  id        String     @id @default(uuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])   
+  quantity  Int
+  price     Float
+}
