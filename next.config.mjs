@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['merchplus.blob.core.windows.net'],
+        remotePatterns: [
+          {
+              hostname: "picsum.photos"
+          },{
+              hostname: "merchplus.blob.core.windows.net"
+          }
+      ]
       },
 };
 

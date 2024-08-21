@@ -10,7 +10,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     },
     include:{
       category:true,
-      reviews:true
+      reviews:true,
+      Image:true
     }
   })
   return NextResponse.json({

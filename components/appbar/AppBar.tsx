@@ -5,7 +5,7 @@ import { Notibell } from "../Notibell";
 import { ShopingBag } from "../shoppingbag";
 export const AppBar = () => {
   return (
-    <header className="bg-primary">
+    <header className="bg-primary ">
       <nav className="container mx-auto w-2/3 flex justify-between items-center ">
         <Image
           src={'/images/logo2.png'}
@@ -22,7 +22,7 @@ export const AppBar = () => {
                 focus:ring-2 focus:ring-teal-500 
                 transform hover:scale-105  hover:underline-offset-4  ">Home</p>
             </Link>
-            <Link href="/">
+            <Link href="/catalog">
               <p className="px-4 py-2 hover:underline rounded
                 transition-all duration-300 delay-100 ease-in-out underline-offset-[16px] decoration-teal-500 
                 hover:text-teal-500 
