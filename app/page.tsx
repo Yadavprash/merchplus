@@ -61,7 +61,7 @@ export default async function Home(){
         <AppBar></AppBar>
         <div className="flex justify-center">
             <div className="w-2/3 flex border border-black border-5">
-                <Gallery data={data ?? []}></Gallery>
+                <Gallery data={tempProd.Image ?? []}></Gallery>
             </div>
         </div>
     </div>

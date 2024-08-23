@@ -3,9 +3,11 @@ import Image from "next/image";
 import { SearchBar } from "../SearchBar";
 import { Notibell } from "../Notibell";
 import { ShopingBag } from "../shoppingbag";
+import { useEffect } from "react";
 export const AppBar = () => {
+ 
   return (
-    <header className="bg-primary ">
+    <header className="bg-primary w-full z-10">
       <nav className="container mx-auto w-2/3 flex justify-between items-center ">
         <Image
           src={'/images/logo2.png'}
