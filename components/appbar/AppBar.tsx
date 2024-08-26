@@ -7,16 +7,16 @@ import { useEffect } from "react";
 export const AppBar = () => {
  
   return (
-    <header className="bg-primary w-full z-10">
+    <header className="bg-white w-full z-10">
       <nav className="container mx-auto w-2/3 flex justify-between items-center ">
         <Image
-          src={'/images/logo2.png'}
+          src={'/images/logo.png'}
           alt={'Merch Plus'}
           width={130}
           height={130}
-          className="object-cover"
+          className="object-cover rounded-full"
         />
-        <div className="flex flex-row font-sans text-sm  text-stone-700 ">
+        <div className="flex flex-row font-sans font-semibold  text-stone-700 ">
             <Link href="/">
               <p className="px-4 py-2 hover:underline rounded
                 transition-all duration-200  ease-in-out underline-offset-[16px] decoration-teal-500 

@@ -21,7 +21,6 @@ export async function POST(req : NextRequest){
             password : data.password
         }
     })
-    console.log(result);
     return NextResponse.json({
         msg:"User Created"
     })

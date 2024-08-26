@@ -11,10 +11,9 @@ export const NEXT_AUTH_CONFIG = {
           async authorize(credentials){
 
             return {
-                id :"user1",
-                name: "asd",
-                userId: "asd",
-                email: "ramdomEmail"
+              id :"5ddef83e-01ee-4e9e-a083-717f816f8408",
+              email: "Yadavprashant@gmail.com",
+              name: "Prashant Yadav",
             }
           }
       })

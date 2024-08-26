@@ -8,7 +8,7 @@ const RatingStars = ({ rating }:{rating:number}) => {
     return (
       <svg
         key={starRating}
-        className={`w-5 h-5 ${starRating <= rating ? 'text-yellow-500' : 'text-gray-300'}`}
+        className={`w-5 h-5 ${starRating <= rating ? 'text' : 'text-gray-300'}`}
         fill="currentColor"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"

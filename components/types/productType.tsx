@@ -1,18 +1,18 @@
-interface ProductImage {
+export interface ProductImage {
     id: string;
     url: string;
     productId: string;
   }
   
-interface Color{
+export interface Color{
   id:number;
   name:string;
 }
-interface Size{
+export interface Size{
   id:number;
   name:string;
 }
-interface Review{
+export interface Review{
   id:string,
   rating:number,
   review:string,

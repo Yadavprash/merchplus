@@ -41,7 +41,8 @@ const tempProd: Product = {
         url: "https://merchplus.blob.core.windows.net/merchplusproducts/image_12.jpeg",
         productId: "5e0056c6-4f6e-4330-9a0f-a89e300f6c09"
       }
-    ]
+    ],
+    reviews : []
   } ;
 
 const data = [{ url: "https://picsum.photos/seed/random101/500/500" },
@@ -57,7 +58,9 @@ const data = [{ url: "https://picsum.photos/seed/random101/500/500" },
 ]
 
 export default async function Home(){
+  const session = await getServerSession(NEXT_AUTH_CONFIG);
     return <div >
+      {JSON.stringify(session)};
         <AppBar></AppBar>
         <div className="flex justify-center">
             <div className="w-2/3 flex border border-black border-5">

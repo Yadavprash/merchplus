@@ -11,7 +11,7 @@ export async function GET(req : Request){
         }
       });
     return NextResponse.json({
-        msg: cart
+        cart
     })
 }
 
@@ -39,8 +39,6 @@ export async function POST(req : NextRequest){
             price
         }
     })
-    //Create new cart
-    //Add item to that cart
     return NextResponse.json({
         msg: "Added Item to Cart"
     })
