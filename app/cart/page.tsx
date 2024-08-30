@@ -1,71 +1,78 @@
 "use client"
 import { AppBar } from "@/components/appbar/AppBar";
 import { CartHeader } from "@/components/cart/CartHeader";
-import { Product } from "@/components/types/productType";
-import { CartItem } from "@/components/cart/CartItem";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Cart } from "@/components/cart/CartTypes";
+import { Cart, Product } from "@/components/types/productType";
+import { DefaultSession } from "next-auth";
+import { CartItem } from "@/components/cart/CartItem";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+    } & DefaultSession["user"];
+  }
+}
 
 export default function Home() {
-    const [cart, setCart] = useState<Cart|null>(null);
+    const [cart, setCart] = useState<Cart | null>(null);
     const [products, setProducts] = useState<Product[]>([]); 
-    const [total,setTotal] = useState(0);
-    const session = useSession();
+    const [total, setTotal] = useState(0);
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         const fetchCart = async () => {
-            if (session.status === "authenticated" && session.data?.user?.id) {
-                const id = session.data.user.id;
+            if (status === "authenticated" && session?.user?.id) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/api/cart?userId=${id}`);
+                    const response = await axios.get(`http://localhost:3000/api/cart?userId=${session.user.id}`);
                     setCart(response.data.cart);
                 } catch (e) {
-                    console.log(e);
+                    console.error("Error fetching cart:", e);
                 }
             }
         };
     
-        if (session.status === "authenticated") {
-            fetchCart();
-        }
-        
-    }, [session]);
-  
+        fetchCart();
+    }, [status, session]);
+
     useEffect(() => {
         const populateProducts = async () => {
-            if (cart && Array.isArray(cart.items)) {
-                let prods = [];
-                let total = 0;
-                for (const item of cart.items) {
-                    try {
-                        const response = await axios.get(`http://localhost:3000/api/products/${item.productId}`);
-                        prods.push(response.data.prod);
-                        total += item.quantity * item.price;
-                    } catch (e) {
-                        console.log(e);
-                    }
-
+            if (cart && cart.items.length > 0) {
+                try {
+                    const productRequests = cart.items.map(item =>
+                        axios.get(`http://localhost:3000/api/products/${item.productId}`)
+                    );
+                    const productResponses = await Promise.all(productRequests);
+                    const fetchedProducts = productResponses.map(response => response.data.prod);
+                    const newTotal = fetchedProducts.reduce((sum, prod, idx) => sum + prod.styles[cart.items[idx].styleIdx].price * cart.items[idx].quantity, 0);
+                    setProducts(fetchedProducts);
+                    setTotal(newTotal);
+                } catch (e) {
+                    console.error("Error fetching products:", e);
                 }
-                setProducts(prods);
-                setTotal(total);
             }
         };
-        if(cart){
-            populateProducts();
-        }
+
+        populateProducts();
     }, [cart]);
 
-    if (session.status === "loading") {
+    const handleItemDelete = (cartItemId: string) => {
+        if (cart) {
+            setCart({
+                ...cart,
+                items: cart.items.filter(item => item.id !== cartItemId)
+            });
+        }
+    };
+
+    if (status === "loading") {
         return <div>Loading...</div>;
     }
 
     return (
         <div>
-            {/* {JSON.stringify(session)} */}
-            {/* {JSON.stringify(cart)} */}
-            {/* {JSON.stringify(products)} */}
             <AppBar />
             <div className="flex m-5 justify-center">
                 <div className="w-full mx-20">
@@ -78,8 +85,16 @@ export default function Home() {
                                 <CartHeader />
                             </div>
                             <div>
-                                {Array.isArray(cart?.items) && products.map((product, idx) => (
-                                    <CartItem key={idx} quantity={cart.items[idx].quantity} item={product} />
+                                {cart?.items.length === products.length &&  Array.isArray(cart?.items) && products.map((product, idx) => (
+                                    <CartItem 
+                                        key={idx} 
+                                        cartItemId={cart.items[idx].id} 
+                                        quantity={cart.items[idx].quantity} 
+                                        item={product} 
+                                        styleIdx={cart.items[idx].styleIdx} 
+                                        sizeIdx={cart.items[idx].sizeIdx} 
+                                        onDelete={handleItemDelete} 
+                                    />
                                 ))}
                             </div>
                         </div>

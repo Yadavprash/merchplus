@@ -48,7 +48,7 @@ export const Gallery = ({ data }: { data: ProductImage[] }) => {
         </div>
     </div>
 
-    <div className="m-2 relative"> {/* Set position to relative */}
+    <div className="m-2 relative"> 
         {data.length > 0 && (
             <Image
                 src={data[currImage].url + process.env.NEXT_PUBLIC_AZURE_BLOB_TOKEN}

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Product } from "@/components/types/productType";
+import { useEffect, useState } from 'react';
+import { Product, Style } from "@/components/types/productType";
 import SizeSelector from "@/components/product/SizeSelector";
 import ColorSelector from "@/components/product/ColorSelector";
 import Features from "@/components/product/Features";
@@ -7,26 +7,29 @@ import RatingStars from "@/components/RatingStar";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { Styles } from '@/components/styles/Styles';
 
 interface ProductInfoProps {
   product: Product;
+  currStyle:number;
+  setCurrStyle:React.Dispatch<React.SetStateAction<number>>;
+  styles:Style[];
   overallRating: number;
 }
 
-export default function ProductInfo({ product, overallRating }: ProductInfoProps) {
+export default function ProductInfo({ product,currStyle,setCurrStyle ,styles,overallRating }:ProductInfoProps) {
   const session = useSession();
   const router = useRouter();
-  const [selectedSize, setSelectedSize] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(0);
 
   const addToCart = async() =>{
     const result = await(axios.post("http://localhost:3000/api/cart",{
       userId :(session?.data?.user as { id: string }).id,
       productId : product.id,
       quantity: 1,
-      price: product.price
+      styleIdx : currStyle,
+      sizeIdx : selectedSize
     }))
-    console.log(result)
     router.push("/cart");
   }
 
@@ -40,9 +43,9 @@ export default function ProductInfo({ product, overallRating }: ProductInfoProps
             ( {product.reviews.length} Reviews )
           </div>
         </div>
-        <div className="text-4xl p-3 font-bold text-wrap">₹{product.price}</div>
+        <div className="text-4xl p-3 font-bold text-wrap">₹{styles[currStyle].price}</div>
         <SizeSelector sizes={product.size} selectedSize={selectedSize} setSelectedSize={setSelectedSize} />
-        <ColorSelector colors={product.color} selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+        <Styles currStyle={currStyle}  setCurrStyle={setCurrStyle} styles={styles}></Styles>
         <div className="flex items-center p-2">
           <div className="mx-2">
             <button onClick={addToCart} className="bg-secondary text-sm text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300">

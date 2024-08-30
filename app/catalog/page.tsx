@@ -37,7 +37,7 @@ const product = {
         <div className="flex justify-center">
             <div className="w-2/3 border border-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-10 ">
             {products.map((prod:Product,idx)=>{
-                if(prod.Image != null)
+                if(prod.styles != null)
                  return <Link key={prod.id} href={`/product/${prod.id}`}>
                   <ProductCard key={idx} product ={prod} />
                  </Link> 

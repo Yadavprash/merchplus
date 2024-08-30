@@ -1,4 +1,5 @@
 import  CredentialsProvider  from "next-auth/providers/credentials";
+import prisma from "@/db";
 
 export const NEXT_AUTH_CONFIG = {
     providers : [
@@ -9,12 +10,19 @@ export const NEXT_AUTH_CONFIG = {
             password: { label: "Password", type: "password" }
           },
           async authorize(credentials){
+            
+            try{
+              const result = prisma.user.findUnique({
+                where:{
+                  id:"6784bca8-3146-454e-941f-62d2511df37c"
+                }
+              })
 
-            return {
-              id :"5ddef83e-01ee-4e9e-a083-717f816f8408",
-              email: "Yadavprashant@gmail.com",
-              name: "Prashant Yadav",
+              return result;
+            }catch(e){
+              return null;
             }
+
           }
       })
     ],

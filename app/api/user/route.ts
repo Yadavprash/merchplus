@@ -9,7 +9,7 @@ export async function GET(req : NextRequest){
     });
     return NextResponse.json({
         user : users
-    })
+    }) 
 }
 
 export async function POST(req : NextRequest){
@@ -22,6 +22,6 @@ export async function POST(req : NextRequest){
         }
     })
     return NextResponse.json({
-        msg:"User Created"
+        msg:result
     })
 }

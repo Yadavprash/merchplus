@@ -24,28 +24,35 @@ model User {
 }
 
 model Product {
-  id String @id @default(uuid())
-  name String
+  id          String     @id @default(uuid())
+  name        String
   description String?
-  color String?
-  size String?
-  price Float
-  image String?
+  size        String[]
 
-  reviews     Review[] @relation("ProductReviews")
-  category   Category?  @relation(fields: [categoryid], references: [id])
-  categoryid String?
-  presentInCarts  CartItem[]
+  reviews          Review[]   @relation("ProductReviews")
+  presentInCarts   CartItem[]
+  category         Category?  @relation(fields: [categoryid], references: [id])
+  categoryid       String?
 
-  Image Image[]
+  styles Style[] @relation("ProductStyles")
 }
 
-model Image{
-  id String @id @default(uuid())
-  url String
-  productId String
-  product Product @relation(fields: [productId],references: [id])
+model Style {
+  id          String     @id @default(uuid())
+  name        String
+  price       Float
+  images      Image[]   @relation("StyleImages")
+  productId   String
+  product     Product    @relation("ProductStyles", fields: [productId],references: [id])
 }
+
+model Image {
+  id        String  @id @default(uuid())
+  url       String
+  styleId   String
+  style     Style   @relation("StyleImages", fields: [styleId], references: [id])
+}
+
 
 model Review {
   id         String     @id @default(uuid())
@@ -80,5 +87,6 @@ model CartItem {
   productId String
   product   Product @relation(fields: [productId], references: [id])   
   quantity  Int
-  price     Float
+  styleIdx  Int
+  sizeIdx   Int
 }

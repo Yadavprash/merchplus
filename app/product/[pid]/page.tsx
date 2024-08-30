@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AppBar } from "@/components/appbar/AppBar";
-import { Product } from "@/components/types/productType";
+import { Product, Style } from "@/components/types/productType";
 import { Gallery } from "@/components/gallery/gallery";
 import ProductInfo from "@/components/product/ProductInfo";
 import { Reviews } from '@/components/reviews/Reviews';
@@ -17,6 +17,9 @@ export default function ProductDetails() {
 
   const [product, setProduct] = useState<Product|null>(null);
   const [overallRating, setOverallRating] = useState(4);
+  const [styles,setStyles] = useState<Style[] | null>(null);
+  const [currStyle,setCurrStyle] = useState<number>(0);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +33,20 @@ export default function ProductDetails() {
 
     fetchData();
   }, []);
+
+  useEffect(()=>{
+    const fetchStyles = async() =>{
+      if(product){
+          try{
+            const response = await axios.get(`http://localhost:3000/api/products/styles/${product.id}`);
+            setStyles(response.data.prod)
+          }catch(e){
+            console.log(e);
+          }
+      }
+    }
+    fetchStyles()
+  },[product])
   if(!product){
     return <div>
       loading...
@@ -41,8 +58,8 @@ export default function ProductDetails() {
       {/* <RouteName/> */}
       <div className="flex justify-center">
         <div className="w-2/3 grid grid-cols-2 ">
-          <Gallery data={product.Image ?? []} />
-          <ProductInfo product={product} overallRating={overallRating} />
+          {styles && <Gallery data={styles[currStyle].images ?? []} /> }
+          {styles &&<ProductInfo product={product} currStyle={currStyle} setCurrStyle={setCurrStyle} styles={styles} overallRating={overallRating} />}
         </div>
       </div>
       <div className="w-full ">

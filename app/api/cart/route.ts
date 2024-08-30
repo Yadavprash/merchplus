@@ -16,7 +16,7 @@ export async function GET(req : Request){
 }
 
 export async function POST(req : NextRequest){
-    const {userId,productId,quantity ,price} = await req.json();
+    const {userId,productId,quantity ,styleIdx,sizeIdx} = await req.json();
     // Find an existing cart for the user
     let cart = await prisma.cart.findFirst({
         where: { userId },
@@ -36,10 +36,28 @@ export async function POST(req : NextRequest){
             cartId : cart.id,
             productId,
             quantity,
-            price
+            styleIdx,
+            sizeIdx
         }
     })
     return NextResponse.json({
         msg: "Added Item to Cart"
     })
+}
+
+export async function DELETE(req : Request){
+  //Get The current Users Cart
+  const url = new URL(req.url);
+  const id = url.searchParams.get("cartItemId") || "";
+  try{
+     await prisma.cartItem.delete({
+        where: { id },
+        
+      });
+      return NextResponse.json({
+        msg:"Item removed from cart"  
+      })
+  }catch(e){
+    console.log(e)
+  }
 }
