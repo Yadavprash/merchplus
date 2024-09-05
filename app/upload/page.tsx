@@ -42,10 +42,11 @@ const UploadPage = () => {
     try {
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData,
+        body: formData, 
       });
       const result = await response.json();
       console.log(result);
+      alert(result.message);
       // Handle success (e.g., show a success message, clear form, etc.)
     } catch (error) {
       console.error(error);

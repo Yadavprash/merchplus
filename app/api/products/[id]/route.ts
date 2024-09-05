@@ -8,11 +8,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       id: prodId
     },
     include:{
-      category:true,
+      categories:true,
       reviews:true,
       styles:{
         include :{
-          images : true
+          images : {
+            orderBy:{
+              url:'asc'
+            }
+          }
         }
       }
     }
