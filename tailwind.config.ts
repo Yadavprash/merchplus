@@ -8,6 +8,13 @@ const config: Config = {
   ],
   theme: {
     extend: { 
+      fontFamily: {
+        sans: ['Inter', 'Poppins', 'Roboto', 'sans-serif'],
+        serif: ['Lora', 'Playfair Display', 'serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        openSans: ['Open Sans', 'sans-serif'],
+        code: ['Source Code Pro', 'monospace'],
+      },
       colors : {
         primary: '#fafafa',
         secondary:'#3d2217',

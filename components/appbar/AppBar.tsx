@@ -3,6 +3,7 @@ import Image from "next/image";
 import { SearchBar } from "../SearchBar";
 import { ShopingBag } from "../shoppingbag";
 import { usePathname } from "next/navigation";
+import { Product } from "@/components/types/productType";
 
 const navLinkClass =
   "px-4 py-2 hover:underline rounded transition-all duration-300 delay-100 ease-in-out underline-offset-[16px] decoration-teal-500 hover:text-teal-500 focus:ring-2 focus:ring-teal-500 transform hover:scale-105 hover:underline-offset-4 active:text-teal-500";
@@ -19,7 +20,7 @@ const Dropdown = ({ title, items }:DropdownTypes) => (
   <div className="relative group">
       <div className={navLinkClass}>{title}</div>
     <div className="absolute z-30 hidden group-hover:block border-2 bg-primary rounded-md">
-      <div className="flex flex-col p-2 space-y-2 items-center shadow-md hover:shadow-teal-500">
+      <div className="flex flex-col p-2 space-y-2 items-center shadow hover:shadow-teal-200">
         {items.map(({ name, href }) => (
           <Link key={name} href={href} className={navLinkClass}>
             {name}
@@ -30,7 +31,7 @@ const Dropdown = ({ title, items }:DropdownTypes) => (
   </div>
 );
 
-export const AppBar = () => {
+export const AppBar = ({setProducts}:{setProducts : React.Dispatch<React.SetStateAction<Product[]>> | null}) => {
   const path = usePathname();
   const categoryItems = [
     { name: "Figurines", href: "/catalog/filters/category/Figurine" },
@@ -63,7 +64,7 @@ export const AppBar = () => {
 
         {path !== "/" && (
           <div className="mt-1">
-            <SearchBar />
+            <SearchBar setProducts={setProducts} />
           </div>
         )}
 

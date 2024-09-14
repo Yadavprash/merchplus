@@ -1,9 +1,15 @@
 "use client"
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 export default function() {
-    const router = useRouter();
+    const { data: session } = useSession();
+
+    if(session){
+        return <div>
+          <p>Welcome, {session.user.name}</p>
+          <button onClick={() => signOut()}>Sign out</button>
+        </div>
+    }
 
     return <div>
         <button onClick={async () => {
@@ -16,14 +22,11 @@ export default function() {
         }}>Login with Github</button>
         <br />
         <button onClick={async () => {
-            const res = await signIn("credentials", {
-                username: "",
-                password: "",
-                redirect: false,
+            const res = await signIn("guest", {
+                redirect: true,
             });
             console.log(res);
-            router.push("/")
-        }}>Login with email</button>
+        }}>Guest Login</button>
         
     </div>
 }

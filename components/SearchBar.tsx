@@ -1,4 +1,46 @@
-export const SearchBar = () => {
+"use client"
+import axios from "axios";
+import {  useEffect, useState } from "react";
+import { Product } from "@/components/types/productType"
+export const SearchBar = ({setProducts}:{setProducts : React.Dispatch<React.SetStateAction<Product[]>> | null}) => {
+    const [query,setQuery] = useState("");
+    const [debouncedQuery,setDebouncedQuery] = useState("");
+    useEffect(()=>{
+      const timerId = setTimeout(()=>{
+        setDebouncedQuery(query);
+      },500)
+
+      return () =>{
+        clearTimeout(timerId);
+      }
+      
+    },[query])
+    useEffect(()=>{
+      const fetchResults = async () => {
+        if (query.length && setProducts) {
+          try {
+            const response = await axios.post("/api/products/search", { query });
+            
+            const data = response.data.products;
+            setProducts(data)
+          } catch (error) {
+            console.error("Error fetching search results:", error);
+          }
+        } else {
+          // try {
+          //   const response = await axios.get("/api/products");
+            
+          //   const data = response.data.msg;
+          //   setProducts(data)
+          // } catch (error) {
+          //   console.error("Error fetching search results:", error);
+          // }
+          // console.warn("Query is empty, not sending a request.");
+        }
+      };
+      
+      fetchResults();
+    },[debouncedQuery,setProducts]);
     return (
       <div className="border rounded bg-primary focus-within:border-black">
         <div className="relative flex items-center h-8  rounded py-5 overflow-hidden">
@@ -23,7 +65,8 @@ export const SearchBar = () => {
             className="peer h-full w-full outline-none text-xs text-gray-700 py-5 px-2 bg-primary "
             type="text"
             id="search"
-            placeholder="Search"
+            placeholder="search for products"
+            onChange={(e) => setQuery(e.target.value)}
           />
         </div>
       </div>

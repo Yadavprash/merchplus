@@ -1,8 +1,8 @@
 // components/RatingStars.js
-import React from 'react';
+import React, { useState } from 'react';
 
-const RatingStars = ({ rating }:{rating:number}) => {
-  // Generate an array of stars based on the rating
+const RatingStars = ({ rating,canHover,setRating }:{rating:number,canHover:boolean,setRating:React.Dispatch<React.SetStateAction<number>>|null}) => {
+
   const stars = Array.from({ length: 5 }, (_, index) => {
     const starRating = index + 1;
     return (
@@ -11,6 +11,7 @@ const RatingStars = ({ rating }:{rating:number}) => {
         className={`w-5 h-5 ${starRating <= rating ? 'text' : 'text-gray-300'}`}
         fill="currentColor"
         viewBox="0 0 24 24"
+        onMouseEnter={() => canHover && setRating && setRating(starRating)}
         xmlns="http://www.w3.org/2000/svg"
       >
         <path

@@ -1,32 +1,42 @@
 import  CredentialsProvider  from "next-auth/providers/credentials";
-import prisma from "@/db";
+import GoogleProvider from "next-auth/providers/google";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient()
 
 export const NEXT_AUTH_CONFIG = {
     providers : [
       CredentialsProvider({
-        name : 'Credentials',
-        credentials: {
-            username: { label: "Username", type: "text", placeholder: "jsmith" },
-            password: { label: "Password", type: "password" }
+        id: "guest",
+      name: "Guest",
+      credentials: {},
+      async authorize() {
+        // Create a guest user in your Prisma database
+        const guestUser = await prisma.user.create({
+          data: {
+            name: `Guest_${Math.floor(Math.random() * 10000)}`,
+            email: `guest_${Math.floor(Math.random() * 10000)}@example.com`,
           },
-          async authorize(credentials){
-            
-            try{
-              const result = prisma.user.findUnique({
-                where:{
-                  id:"6784bca8-3146-454e-941f-62d2511df37c"
-                }
-              })
+        });
 
-              return result;
-            }catch(e){
-              return null;
-            }
-
-          }
+        if (guestUser) {
+          return guestUser;
+        } else {
+          return null;
+        }
+      },
+      }),
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID || "",
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
       })
     ],
+    adapter:PrismaAdapter(prisma),
     secret: process.env.NEXTAUTH_SECRET,
+    session:{
+      strategy:"jwt"
+    },
     callbacks: {
       session:async ({ session, token, user }: any) => {
           if (session.user) {
@@ -35,4 +45,5 @@ export const NEXT_AUTH_CONFIG = {
           return session
       }
     },
+   
 }

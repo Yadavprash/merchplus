@@ -1,4 +1,3 @@
-// types.ts
 
 // User model type
 export interface User {
@@ -19,9 +18,10 @@ export interface Product {
   size: string[];
   reviews: Review[];
   presentInCarts: CartItem[];
-  category?: Category;
-  categoryid?: string;
+  categories: Category[];
   styles: Style[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Style model type
@@ -45,10 +45,16 @@ export interface Image {
 // Review model type
 export interface Review {
   id: string;
+  title:string;   
   rating: number;
   review: string;
   product: Product;
   productId: string;
+  likes: number;
+  createdAt: Date;
+  updatedAt: Date;
+  username:string;
+  userImage:string;
 }
 
 // Category model type

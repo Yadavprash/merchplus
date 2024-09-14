@@ -38,7 +38,7 @@ export default function ProductInfo({ product,currStyle,setCurrStyle ,styles,ove
       <div className="overflow-auto scrollbar-hidden max-h-full">
         <div className="text-3xl p-2 font-bold text-wrap">{product.name}</div>
         <div className="flex text-xs px-2">
-          <RatingStars rating={overallRating} />
+          <RatingStars rating={overallRating} canHover={false} setRating={null}/>
           <div className="flex p-1 font-semibold">
             ( {product.reviews.length} Reviews )
           </div>
@@ -47,13 +47,13 @@ export default function ProductInfo({ product,currStyle,setCurrStyle ,styles,ove
         <SizeSelector sizes={product.size} selectedSize={selectedSize} setSelectedSize={setSelectedSize} />
         <Styles currStyle={currStyle}  setCurrStyle={setCurrStyle} styles={styles}></Styles>
         <div className="flex items-center p-2">
-          <div className="mx-2">
-            <button onClick={addToCart} className="bg-secondary text-sm text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300">
+          <div className="">
+            <button onClick={addToCart} className="bg-black text-sm text-white font-semibold py-2 px-4 rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300">
               ADD TO CART
             </button>
           </div>
-          <div className="mx-2">
-            <button className="bg-secondary text-white text-sm font-semibold py-2 px-4 rounded-full shadow-lg hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition ease-in-out duration-300">
+          <div className="mx-4">
+            <button className="bg-black text-white text-sm font-semibold py-2 px-4 rounded-md shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition ease-in-out duration-300">
               BUY NOW
             </button>
           </div>

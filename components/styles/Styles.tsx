@@ -13,7 +13,7 @@ export const Styles = ({styles,currStyle ,setCurrStyle}:StyleProps) =>{
         setCurrImage(idx);
     }, []);
     return <div>
-        <div className="font-semibold mx-2 font-serif ">Style: {styles[currStyle].name}</div>
+        <div className="font-semibold mx-2 text-sm font-montserrat ">Style: {styles[currStyle].name}</div>
         <div className="flex ">
             {styles && styles.map((style,idx) =>{
             
@@ -29,7 +29,7 @@ export const Styles = ({styles,currStyle ,setCurrStyle}:StyleProps) =>{
                         }}
                         onMouseEnter={() =>handleImageChange(idx)}
                         className={`relative border rounded my-2 ml-2 ${
-                            currImage === idx ? 'border-4 border-green-600' : 'border-1 border-black'
+                            currImage === idx ? 'border-2 border-green-600' : 'border-1 border-black'
                         }`}
                         ></Image>
                     </div>

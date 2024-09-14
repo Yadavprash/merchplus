@@ -6,6 +6,8 @@ const nextConfig = {
               hostname: "picsum.photos"
           },{
               hostname: "merchplus.blob.core.windows.net"
+          },{
+            hostname:"lh3.googleusercontent.com"
           }
       ]
       },

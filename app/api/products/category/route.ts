@@ -1,6 +1,14 @@
 import prisma from "@/db";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function GET(req : NextRequest) {
+  const categories = await prisma.category.findMany();
+  return NextResponse.json({
+    categories
+  })
+}
+
+
 export async function POST(req : NextRequest) {
     const {categoryNames,productId}:{categoryNames:string[],productId:string} = await req.json();
     try {

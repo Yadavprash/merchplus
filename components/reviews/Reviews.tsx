@@ -1,9 +1,112 @@
+"use client"
 import RatingStars from "../RatingStar"
-import { SearchBar } from "../SearchBar"
-import { Review } from "../types/productType"
-export const Reviews = ({ data }: { data: Review[] }) => {
+import { ReviewCard } from "@/components/reviews/ReviewCard"
+import { SearchBar } from "@/components/SearchBar"
+import { Review } from "@/components/types/productType"
+import { AddReviewPopup } from "./AddReview"
+import { useState, useRef, useEffect } from "react"
+import { SearchReviews } from "../SearchReviews"
+export const Reviews = ({productId, data ,setOverallRating}: {productId:string, data: Review[],setOverallRating:React.Dispatch<React.SetStateAction<number>> }) => {
+    const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+    const popupRef = useRef<HTMLDivElement | null >(null);
+    const handleOpenPopup = () => setIsPopupOpen(true);
+    const handleClosePopup = () => setIsPopupOpen(false);
+
+    //Filter states
+    const [originalReviews] = useState(data);
+    const [reviews,setReviews] = useState(data);
+    const [selectedRating,setSelectedRatings] = useState<number[]>([]);
+    const [searchString, setSearchString] = useState("");
+    const [sortOption,setSortOption] = useState("");
+    
 
 
+  const handleRatingChange = (event :React.ChangeEvent<HTMLInputElement>) => {
+    const rating = parseInt(event.target.value);
+
+    if (event.target.checked) {
+      setSelectedRatings((prev) => [...prev, rating]);
+    } else {
+      setSelectedRatings((prev) =>
+        prev.filter((r) => r !== rating)
+      );
+    }
+  };
+
+    useEffect(()=>{
+        const filteredReviews = originalReviews.filter(review => {
+            const withinSelectedRatings = selectedRating.length ? selectedRating.includes(review.rating) : true;
+            const containsQueryString = searchString.length ? review.title.toLowerCase().includes(searchString) || review.review.toLowerCase().includes(searchString) : true;
+
+            return withinSelectedRatings && containsQueryString
+        })
+        setReviews(filteredReviews);
+    },[selectedRating,searchString])
+
+    useEffect(()=>{
+        const handleClickOutside = (event: MouseEvent) =>{
+            const target = event.target as Node;
+            if(popupRef.current && !popupRef.current.contains(target)){
+                handleClosePopup();   
+            }
+        }
+        if(isPopupOpen){
+            document.addEventListener("mousedown",handleClickOutside);
+        }else{
+            document.removeEventListener("mousedown",handleClickOutside);
+
+        }
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    },[isPopupOpen])
+
+    const  overallRating = () =>{
+        const rating = data.reduce((acc,curr) => acc + curr.rating,0) / data.length;
+        setOverallRating(rating)
+        return rating;
+    }
+    function sortByMostRecent() {
+        const sortedReviews = [...reviews].sort((a, b) => {
+            const dateA = new Date(a.updatedAt).getTime();
+            const dateB = new Date(b.updatedAt).getTime();
+            return dateB - dateA; 
+        });
+        setReviews(sortedReviews);
+    }
+    function sortByMostHelpful() {
+        const sortedReviews = [...reviews].sort((a, b) => b.likes - a.likes);
+        setReviews(sortedReviews);
+    }
+    
+    function sortByRatingAsc() {
+        const sortedReviews = [...reviews].sort((a, b) => a.rating - b.rating);
+        setReviews(sortedReviews);
+    }
+    function sortByRatingDesc() {
+        const sortedReviews = [...reviews].sort((a, b) => b.rating - a.rating);
+        setReviews(sortedReviews);
+    }
+    
+    function handleChange(e: React.ChangeEvent<HTMLSelectElement>){
+        const value = e.target.value;
+        setSortOption(value)
+
+        switch(value){
+            case 'most-recent':
+                sortByMostRecent();
+                break;
+            case 'most-helpful':
+                sortByMostHelpful();
+                break;
+            case 'rating-asc':
+                sortByRatingAsc();
+                break;
+            case 'rating-desc':
+                sortByRatingDesc();
+                break;
+            default:
+                break;
+        }
+    }
     return <div className="flex justify-center mt-5 ">
         <div className="w-2/3  grid grid-cols-4  border-t">
             <div className="col-span-1 font-serif">
@@ -15,7 +118,7 @@ export const Reviews = ({ data }: { data: Review[] }) => {
                         Filter Reviews
                     </div>
                     <div>
-                        <SearchBar />
+                        <SearchReviews setQuery={setSearchString} />
                     </div>
                 </div>
                 <div>
@@ -24,12 +127,13 @@ export const Reviews = ({ data }: { data: Review[] }) => {
                             <h2 className="font-semibold">Rating</h2>
                             <div className="mt-1 space-y-1">
                                 {[5, 4, 3, 2, 1].map((rating) => (
-                                    <div key={rating}>
+                                    <div key={rating} >
                                         <input
                                             type="checkbox"
                                             id={`${rating}stars`}
                                             value={rating}
                                             className="mr-2"
+                                            onChange={handleRatingChange}
                                         />
                                         <label htmlFor={`${rating}stars`}>
                                             {rating} stars
@@ -38,91 +142,60 @@ export const Reviews = ({ data }: { data: Review[] }) => {
                                 ))}
                             </div>
                         </div>
-
-                        <div>
-                            <h2 className="font-semibold pt-1">Photos</h2>
-                            <div className="mt-1">
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        id="withImages"
-                                        className="mr-2"
-                                    />
-                                    <label htmlFor="withImages">Only show posts with images</label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-            <div className="col-span-3 pl-5">
-                <div className="flex justify-center m-5">
+            <div className="col-span-3 pl-5 min-h-[400px]">
+                <div className="flex justify-between my-5">
                     <div>
                         <div className="flex">
-                            <div className="font-serif text-3xl">4.3</div>
+                            <div className="font-serif text-3xl">{overallRating().toFixed(1)}</div>
                             <div className="flex flex-col justify-evenly">
                                 <div></div>
-                                <RatingStars rating={4.3} />
+                                <RatingStars rating={overallRating()} setRating={null} canHover={false} />
                             </div>
                         </div>
 
                         <div className="text-gray-600 text-xs ">
-                            Based on 5783 ratings
+                            Based on {data.length} ratings
                         </div>
+                    </div>
+                    <div>
+                        <button className="bg-black text-sm text-white font-semibold py-2 px-4 rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300" onClick={handleOpenPopup}>Add Review</button>
                     </div>
                 </div>
                 <div>
                     <div className="flex justify-between">
                         <div className="text-sm font-semibold">
-                            Showing 1 of 1 results
+                            Showing {reviews.length} of {reviews.length} results
                         </div>
                         <div>
                             <div className="flex justify-center items-center ">
                                 <label htmlFor="sort" className="text-xs text-gray-700">Sort by:</label>
                                 <select
                                     id="sort"
-                                    // value={selectedOption}
-                                    // onChange={handleChange}
+                                    value={sortOption}
+                                    onChange={handleChange}
                                     className="bg-primary w-28 text-xs text-gray-700  pl-2  focus:outline-none"
                                 >
-                                    <option>Most Recent</option>
-                                    <option>Most Helpful</option>
-                                    <option>Highest to Lowest Rating</option>
-                                    <option>Lowest to Highest Rating</option>
+                                    <option value={'most-recent'}>Most Recent</option>
+                                    <option value={'most-helpful'}>Most Helpful</option>
+                                    <option value={'rating-desc'}>Highest to Lowest Rating</option>
+                                    <option value={'rating-asc'}>Lowest to Highest Rating</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div className="bg-white mt-2">
-                        <div className="px-6 py-4">
-                            <div className="flex items-center mb-1">
-                                <div className="relative inline-flex items-center justify-center w-5 h-5 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                                    <span className="font-medium text-xs text-gray-600 dark:text-gray-300">J</span>
-                                </div>
-
-                                <div className="text-gray-600 mx-2 text-xs">6 days ago</div>
-                            </div>
-                            <RatingStars rating={3} />
-                            <h2 className="text-lg font-semibold mt-1 ">Oversized</h2>
-                            <p className="text-gray-700 text-sm mt-1">I love the oversized look it’s comfy for lounging. The color is stellar. For a the price I wouldn’t buy again in another color. The hardware is plastic and while it keeps it lightweight makes it feel cheap and I worry about the longevity of the piece which is usually what attracts me to this store.</p>
-
-                            <div className="flex items-center mt-2">
-                                <div>
-                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 10C8.28283 8.32595 11.3995 5.54014 13.8271 1.64258C14.1784 1.07865 14.9676 0.967672 15.4374 1.43746L16.0265 2.02648C16.313 2.31302 16.3983 2.74415 16.2424 3.1182L14 8.50003H21.1257C22.3661 8.50003 23.3073 9.61747 23.0966 10.8398L21.2862 21.3398C21.1208 22.2991 20.2888 23 19.3153 23H10L6 20.5" stroke="#767676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M6 8H1V22H6V8Z" stroke="#767676" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
-                                </div>
-                                <div className="text-gray-600 ml-2 ">
-                                    5
-                                </div>
-                                <div className="flex items-center text-sm ml-1 text-gray-600">
-                                    People found this helpful
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {reviews && reviews.map((review,idx)=>{
+                        return <ReviewCard review={review}></ReviewCard>
+                    })}
                 </div>
             </div>
         </div>
+            <AddReviewPopup productId={productId}  isOpen={isPopupOpen} onClose={handleClosePopup} popupRef={popupRef}></AddReviewPopup>
     </div>
 }
+
+

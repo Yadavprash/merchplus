@@ -73,7 +73,8 @@ export default function Home() {
 
     return (
         <div>
-            <AppBar />
+            {JSON.stringify(session)}
+            <AppBar setProducts={null}/>
             <div className="flex m-5 justify-center">
                 <div className="w-full mx-20">
                     <div className="grid grid-cols-4">
