@@ -7,7 +7,19 @@ export async function GET(req : Request){
     let cart = await prisma.cart.findFirst({
         where: { userId },
         include : {
-            items:true
+            items:{
+              include:{
+                product:{
+                  include:{
+                    styles:{
+                      include:{
+                        images:true
+                      }
+                    }
+                  }
+                }
+              }
+            }
         }
       });
     return NextResponse.json({

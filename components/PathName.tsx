@@ -6,13 +6,12 @@ export const PathName = () => {
     const segments = useMemo(() => path?.split('/').filter(Boolean).filter(segment => !["filters", "category"].includes(segment)), [path]);
 
     return (
-        <div className='flex  items-center text-sm my-2 p-2 my-1 rounded  border  font-sans text-gray-800'>
+        <div className='flex items-center text-sm my-2 p-2 rounded border font-sans text-gray-800'>
             <div className='flex items-center'>
                 <span className='font-medium'>Home</span>
                 <svg
                     fill="#000000"
                     version="1.1"
-                    id="Capa_1"
                     xmlns="http://www.w3.org/2000/svg"
                     width="10px"
                     height="12px"
@@ -31,7 +30,6 @@ export const PathName = () => {
                         <svg
                             fill="#000000"
                             version="1.1"
-                            id="Capa_1"
                             xmlns="http://www.w3.org/2000/svg"
                             width="10px"
                             height="12px"

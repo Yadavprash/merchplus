@@ -2,6 +2,7 @@ import axios from "axios";
 import { Product } from "../types/productType";
 import Image from "next/image";
 import { useState } from "react";
+import { SkeletonCartItem } from "../skeletons";
 
 interface CartItemProps {
   item: Product;
@@ -9,7 +10,8 @@ interface CartItemProps {
   cartItemId: string;
   styleIdx: number;
   sizeIdx: number;
-  onDelete: (cartItemId: string) => void; // Add a callback prop to update the parent component
+  onDelete: (cartItemId: string) => void;
+  loading?: boolean; // Optional loading prop to show skeletons
 }
 
 export const CartItem = ({
@@ -18,65 +20,78 @@ export const CartItem = ({
   styleIdx,
   sizeIdx,
   cartItemId,
-  onDelete, // Accept the callback
+  onDelete,
+  loading = false,
 }: CartItemProps) => {
   const url = item?.styles[styleIdx]
     ? item.styles[styleIdx].images[0].url + process.env.NEXT_PUBLIC_AZURE_BLOB_TOKEN
     : "https://picsum.photos/500/500";
 
-  const [isDeleting, setIsDeleting] = useState(false); // State to track deletion status
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
     try {
       setIsDeleting(true);
       const response = await axios.delete(
-        `http://localhost:3000/api/cart?cartItemId=${cartItemId}`
+        `/api/cart?cartItemId=${cartItemId}`
       );
       console.log("Item deleted:", response.data);
-      onDelete(cartItemId); // Call the callback to update the parent component
+      onDelete(cartItemId);
     } catch (error) {
       console.error("Error deleting item:", error);
     } finally {
-      setIsDeleting(false); // Reset deletion status
+      setIsDeleting(false);
     }
   }
 
+  if (loading || isDeleting) {
+    return (
+      <SkeletonCartItem></SkeletonCartItem>
+    );
+  }
+
   return (
-    <div className={`flex border-b ${isDeleting ? "opacity-50" : ""}`}>
-      <div className="my-2">
-        <Image width={200} height={200} src={url} alt="prodImage" />
+    <div className={`flex flex-col space-y-1 mb-2 pb-2 md:flex-row border-b ${isDeleting ? "opacity-50" : ""}`}>
+      <div className="my-2 md:w-1/3 w-full flex justify-center">
+        <Image
+          width={200}
+          height={200}
+          src={url}
+          alt="prodImage"
+          className="object-cover max-w-full h-auto"
+        />
       </div>
-      <div className="w-full p-2">
-        <div className="flex flex-col">
-          <div>{item.name}</div>
-          <div>{item.styles[styleIdx].name}</div>
-          <div>{item.size[sizeIdx]}</div>
+      <div className="w-full p-2 flex flex-col justify-between  ">
+        <div className="flex flex-col   md:flex-row justify-between">
+          <div className="flex flex-col space-y-1 mb-2 md:mb-0 lg:w-[400px] text-wrap ">
+            <div className="text-md font-semibold">{item.name}</div>
+            <div className="text-sm text-gray-500">{item.styles[styleIdx].name}</div>
+            <div className="text-sm text-gray-500">Size: {item.size[sizeIdx]}</div>
+          </div>
+          <div className="flex flex-col md:flex-row justify-between ">
+            <div className="flex flex-col items-end mx-2">
+              <div className="text-sm text-gray-500">Item Price</div>
+              <div className="font-medium">₹ {item.styles[styleIdx].price}</div>
+            </div>
+            <div className="flex flex-col items-end mx-2">
+              <div className="text-sm text-gray-500">Quantity</div>
+              <div className="font-medium">{quantity}</div>
+            </div>
+            <div className="flex flex-col items-end mx-2">
+              <div className="text-sm text-gray-500">Total Price</div>
+              <div className="font-medium">₹ {item.styles[styleIdx].price * quantity}</div>
+            </div>
+          </div>
         </div>
-        <div className="flex justify-end">
-          <div className="flex mx-2 flex-col">
-            <div>Item Price</div>
-            <div>{item.styles[styleIdx].price}</div>
-          </div>
-          <div className="flex mx-2 flex-col">
-            <div>Quantity</div>
-            <div>{quantity}</div>
-          </div>
-          <div className="flex ml-2 flex-col">
-            <div>Total Price</div>
-            <div>₹ {item.styles[styleIdx].price * quantity}</div>
-          </div>
-        </div>
-        <div className="flex mt-2 justify-between">
-          <div className="font-mono">Free Shipping + Free Returns</div>
-          <div>
-            <button
-              onClick={handleDelete}
-              className="underline"
-              disabled={isDeleting}
-            >
-              {isDeleting ? "Removing..." : "Remove"}
-            </button>
-          </div>
+        <div className="flex justify-between items-center mt-4">
+          <div className="font-mono text-sm text-gray-600">Free Shipping + Free Returns</div>
+          <button
+            onClick={handleDelete}
+            className="bg-gray-600 text-white text-xs p-2 rounded hover:bg-red-700 transition"
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Removing..." : "Remove"}
+          </button>
         </div>
       </div>
     </div>
