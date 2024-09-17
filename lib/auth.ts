@@ -1,6 +1,6 @@
 import  CredentialsProvider  from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient()
@@ -12,7 +12,6 @@ export const NEXT_AUTH_CONFIG = {
       name: "Guest",
       credentials: {},
       async authorize() {
-        // Create a guest user in your Prisma database
         const guestUser = await prisma.user.create({
           data: {
             name: `Guest_${Math.floor(Math.random() * 10000)}`,
@@ -35,7 +34,7 @@ export const NEXT_AUTH_CONFIG = {
     adapter:PrismaAdapter(prisma),
     secret: process.env.NEXTAUTH_SECRET,
     session:{
-      strategy:"jwt"
+      strategy:'jwt' as const , 
     },
     callbacks: {
       session:async ({ session, token, user }: any) => {
@@ -44,6 +43,5 @@ export const NEXT_AUTH_CONFIG = {
           }
           return session
       }
-    },
-   
+    },  
 }

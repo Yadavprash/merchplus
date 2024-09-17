@@ -51,7 +51,7 @@ export const Reviews = ({
       return withinSelectedRatings && containsQueryString;
     });
     setReviews(filteredReviews);
-  }, [selectedRating, searchString]);
+  }, [originalReviews,selectedRating, searchString]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -70,6 +70,7 @@ export const Reviews = ({
 
   const overallRating = () => {
     const rating = data.reduce((acc, curr) => acc + curr.rating, 0) / data.length;
+    if(!rating) return 0;
     setOverallRating(rating);
     return rating;
   };
@@ -152,12 +153,12 @@ export const Reviews = ({
         <div className="col-span-3 pl-5 min-h-[400px]">
           <div className="flex flex-col lg:flex-row justify-between my-5">
             <div>
-              <div className="flex items-center">
+              {overallRating() > 0 ?   <div className="flex items-center">
                 <div className="font-serif text-3xl">{overallRating().toFixed(1)}</div>
                 <div className="flex flex-col justify-evenly ml-2">
                   <RatingStars rating={overallRating()} setRating={null} canHover={false} />
                 </div>
-              </div>
+              </div> : <div className="font-semibold"> No reviews yet </div>}
               <div className="text-gray-600 text-xs">Based on {data.length} ratings</div>
             </div>
             <div className="mt-4 lg:mt-0">

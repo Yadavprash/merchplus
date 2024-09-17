@@ -7,6 +7,19 @@ interface FiltersProps {
   categories: Category[];
 }
 
+type PriceRangePreset = {
+  label: string;
+  range: [number, number];
+};
+
+const priceRangePresets:PriceRangePreset[] = [
+  { label: 'Rs. 0 - 1999', range: [0, 1999] },
+  { label: 'Rs. 2000 - 4999', range: [2000, 4999] },
+  { label: 'Rs. 5000 - 19999', range: [5000, 19999] },
+  { label: 'Rs. 20000 and above', range: [20000, 999999] },
+  { label: 'Reset Price', range: [0, 999999] }
+];
+
 const Filters: React.FC<FiltersProps> = ({ products, setFilteredProducts, categories }) => {
   // Filter states
   const [originalProducts] = useState(products);
@@ -76,13 +89,7 @@ const handlePresetPriceRange = (min: number, max: number) => {
   <div>
     <label className="block text-sm font-medium text-gray-800">Price Range</label>
     <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
-      {[
-        { label: 'Rs. 0 - 1999', range: [0, 1999] },
-        { label: 'Rs. 2000 - 4999', range: [2000, 4999] },
-        { label: 'Rs. 5000 - 19999', range: [5000, 19999] },
-        { label: 'Rs. 20000 and above', range: [20000, 999999] },
-        { label: 'Reset Price', range: [0, 999999] }
-      ].map((preset, index) => (
+      {priceRangePresets.map((preset, index) => (
         <button
           key={index}
           onClick={() => handlePresetPriceRange(...preset.range)}
