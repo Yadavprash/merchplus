@@ -32,7 +32,7 @@ export const NEXT_AUTH_CONFIG = {
       })
     ],
     adapter:PrismaAdapter(prisma),
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: "itmysecretnotyours",
     session:{
       strategy:'jwt' as const , 
     },
