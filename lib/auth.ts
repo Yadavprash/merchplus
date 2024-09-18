@@ -31,8 +31,8 @@ export const NEXT_AUTH_CONFIG = {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
       })
     ],
+    secret: process.env.SECRET,
     adapter:PrismaAdapter(prisma),
-    secret: process.env.NEXTAUTH_SECRET,
     session:{
       strategy:'jwt' as const , 
     },
