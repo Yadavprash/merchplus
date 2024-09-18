@@ -40,19 +40,18 @@ export const NEXT_AUTH_CONFIG: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }: { token: JWT; user?: any; account?: any }) {
-      // Initial sign-in
       if (account && user) {
         token.accessToken = account.access_token;
-        token.id = user.id; // Storing user id in the token
+        token.id = user.id; 
       }
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
-      // Ensure that token.id exists and is a string
       if (session.user && token.id) {
-        session.user.id = String(token.id); // Type assertion to string
+        session.user.id = String(token.id); 
       }
       return session;
     },
   },
+  debug:true,
 };

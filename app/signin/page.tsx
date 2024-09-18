@@ -12,6 +12,7 @@ export default function Home() {
     }
 
     return <div>
+         {JSON.stringify(session)}
         <button onClick={async () => {
             await signIn("google");
         }}>Login with google</button>
