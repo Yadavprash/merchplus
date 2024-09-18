@@ -17,10 +17,10 @@ export default function Home() {
         }}>Login with google</button>
 
         <br />
-        <button onClick={async () => {
+        {/* <button onClick={async () => {
             await signIn("github");
         }}>Login with Github</button>
-        <br />
+        <br /> */}
         <button onClick={async () => {
             const res = await signIn("guest", {
                 redirect: true,

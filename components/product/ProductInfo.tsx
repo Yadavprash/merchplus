@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react';
 import { Product, Style } from "@/components/types/productType";
 import SizeSelector from "@/components/product/SizeSelector";

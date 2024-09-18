@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import RatingStars from "@/components/RatingStar";
 import { useSession } from "next-auth/react";

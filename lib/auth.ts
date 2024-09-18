@@ -1,47 +1,58 @@
-import  CredentialsProvider  from "next-auth/providers/credentials";
+import { NextAuthOptions } from "next-auth";
+import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/db";
 
-const prisma = new PrismaClient()
 
-export const NEXT_AUTH_CONFIG = {
-    providers : [
-      CredentialsProvider({
-        id: "guest",
+export const NEXT_AUTH_CONFIG: NextAuthOptions = {
+  providers: [
+    CredentialsProvider({
+      id: "guest",
       name: "Guest",
       credentials: {},
       async authorize() {
-        const guestUser = await prisma.user.create({
-          data: {
-            name: `Guest_${Math.floor(Math.random() * 10000)}`,
-            email: `guest_${Math.floor(Math.random() * 10000)}@example.com`,
-          },
-        });
-
-        if (guestUser) {
+        try {
+          const guestUser = await prisma.user.create({
+            data: {
+              name: `Guest_${Math.floor(Math.random() * 10000)}`,
+              email: `guest_${Math.floor(Math.random() * 10000)}@example.com`,
+            },
+          });
           return guestUser;
-        } else {
+        } catch (error) {
+          console.error("Error creating guest user:", error);
           return null;
         }
       },
-      }),
-      GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID || "",
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
-      })
-    ],
-    secret: process.env.SECRET,
-    adapter:PrismaAdapter(prisma),
-    session:{
-      strategy:'jwt' as const , 
-    },
-    callbacks: {
-      session:async ({ session, token, user }: any) => {
-          if (session.user) {
-              session.user.id = token.sub
-          }
-          return session
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user, account }: { token: JWT; user?: any; account?: any }) {
+      // Initial sign-in
+      if (account && user) {
+        token.accessToken = account.access_token;
+        token.id = user.id; // Storing user id in the token
       }
-    },  
-}
+      return token;
+    },
+    async session({ session, token }: { session: Session; token: JWT }) {
+      // Ensure that token.id exists and is a string
+      if (session.user && token.id) {
+        session.user.id = String(token.id); // Type assertion to string
+      }
+      return session;
+    },
+  },
+};
