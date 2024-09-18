@@ -33,7 +33,7 @@ export const NEXT_AUTH_CONFIG: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: 'c1Sez681eEPN/xd52i7yQxnFYRK87c4wOvd9EVf1cRc=',
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
