@@ -27,6 +27,8 @@ const CheckoutPage = () => {
     const [cart, setCart] = useState<Cart | null>(null);
     const { data: session, status } = useSession();
     const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -45,7 +47,7 @@ const CheckoutPage = () => {
         fetchCart();
     }, [status, session]);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<CheckoutForm>({
+    const { register, handleSubmit,reset, formState: { errors } } = useForm<CheckoutForm>({
         resolver: zodResolver(checkoutSchema),
     });
 
@@ -56,10 +58,17 @@ const CheckoutPage = () => {
         }, 0).toFixed(2);
     };
 
-    const onSubmit = (data: CheckoutForm) => {
-        console.log('Checkout data:', data);
-        alert('Order placed');
-    };
+    const onSubmit  = (data:CheckoutForm) => {
+        setIsSubmitting(true);
+        
+        // Simulating an API call or order processing
+        setTimeout(() => {
+          console.log("Checkout data:", data);
+          setIsSubmitting(false);
+          setShowModal(true);  // Show success modal
+          reset(); // Reset form after submission
+        }, 1000);
+      };
 
     return (
         <div>
@@ -198,6 +207,21 @@ const CheckoutPage = () => {
                     </div>
                 </div>
             </div>
+            {/* Modal for Order Placed */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
+            <h3 className="text-lg font-bold">Order Placed Successfully!</h3>
+            <p className="mt-4 text-gray-600">Thank you for your purchase.</p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-6 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
         </div>
     );
 };

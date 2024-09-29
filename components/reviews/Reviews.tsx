@@ -1,7 +1,6 @@
 "use client";
 import RatingStars from "../RatingStar";
 import { ReviewCard } from "@/components/reviews/ReviewCard";
-import { SearchBar } from "@/components/SearchBar";
 import { Review } from "@/components/types/productType";
 import { AddReviewPopup } from "./AddReview";
 import { useState, useRef, useEffect } from "react";
@@ -70,6 +69,7 @@ export const Reviews = ({
 
   const overallRating = () => {
     const rating = data.reduce((acc, curr) => acc + curr.rating, 0) / data.length;
+    
     if(!rating) return 0;
     setOverallRating(rating);
     return rating;

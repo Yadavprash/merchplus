@@ -3,7 +3,7 @@ import prisma from "@/db";
 export async function POST(req:NextRequest){
     const {productId,title,review,rating,username,userImage} = await req.json();
     
-    if(!productId||!title||!review||!rating||!username||!userImage){
+    if(!productId||!title||!review||!rating||!username){
         return NextResponse.json({
             error :"Cannot create review"
         },{status : 400})

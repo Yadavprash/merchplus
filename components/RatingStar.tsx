@@ -1,5 +1,5 @@
 // components/RatingStars.js
-import React, { useState } from 'react';
+import React from 'react';
 
 const RatingStars = ({ rating,canHover,setRating }:{rating:number,canHover:boolean,setRating:React.Dispatch<React.SetStateAction<number>>|null}) => {
 

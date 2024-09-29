@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from 'react';
 import { Product, Style } from "@/components/types/productType";
 import SizeSelector from "@/components/product/SizeSelector";
@@ -6,8 +6,9 @@ import Features from "@/components/product/Features";
 import RatingStars from "@/components/RatingStar";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import { Styles } from '@/components/styles/Styles';
+import Modal from '@/components/Modal'; 
 
 interface ProductInfoProps {
   product: Product;
@@ -18,13 +19,34 @@ interface ProductInfoProps {
 }
 
 export default function ProductInfo({ product, currStyle, setCurrStyle, styles, overallRating }: ProductInfoProps) {
-  const session = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const [selectedSize, setSelectedSize] = useState(0);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const handleLogin = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const guestLogin = async () => {
+    const res = await signIn("guest", {
+      redirect: true,
+  });
+    closeModal();
+  };
 
   const addToCart = async () => {
+    if (!session) {
+      handleLogin();
+      return;
+    }
+
     await axios.post("/api/cart", {
-      userId: (session?.data?.user as { id: string }).id,
+      userId: (session?.user as { id: string }).id,
       productId: product.id,
       quantity: 1,
       styleIdx: currStyle,
@@ -34,8 +56,13 @@ export default function ProductInfo({ product, currStyle, setCurrStyle, styles, 
   };
 
   const addToCheckout = async () => {
+    if (!session) {
+      handleLogin();
+      return;
+    }
+
     await axios.post("/api/cart", {
-      userId: (session?.data?.user as { id: string }).id,
+      userId: (session?.user as { id: string }).id,
       productId: product.id,
       quantity: 1,
       styleIdx: currStyle,
@@ -93,6 +120,27 @@ export default function ProductInfo({ product, currStyle, setCurrStyle, styles, 
           <div className="text-gray-700">{product.description}</div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      {isLoginModalOpen && (
+        <Modal onClose={closeModal}>
+          <div className="p-4 text-center">
+            <h2 className="text-xl font-semibold mb-4">Login Required</h2>
+            <button
+              className="bg-black text-white py-2 px-2 mx-2 rounded-md mb-2"
+              onClick={() => signIn('google')}
+            >
+              Continue with Google
+            </button>
+            <button
+              className="bg-gray-700 text-white py-2 px-4 mx-2 rounded-md mb-2"
+              onClick={guestLogin}
+            >
+              Continue as Guest
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

@@ -26,7 +26,7 @@ export default function Home() {
             const res = await signIn("guest", {
                 redirect: true,
             });
-            console.log(res);
+            // console.log(res);
         }}>Guest Login</button>
         
     </div>

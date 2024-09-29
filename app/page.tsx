@@ -64,11 +64,8 @@ export default function Component() {
 
   const fetchProducts = useCallback(async (ids: string[], setter: Function) => {
     try {
-      const responses = await Promise.all(
-        ids.map((id) => axios.get(`/api/products/${id}`))
-      );
-      const products = responses.map((res) => res.data.prod);
-      setter(products);
+      const res = await axios.get(`/api/products?ids=${ids.join(",")}`);
+      setter(res.data.msg);
     } catch (error) {
       console.error("Error fetching products:", error);
     }

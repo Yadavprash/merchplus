@@ -15,7 +15,7 @@ export default function ProductDetails() {
   const pid = searchParams?.pid;
 
   const [product, setProduct] = useState<Product | null>(null);
-  const [overallRating, setOverallRating] = useState(4);
+  const [overallRating, setOverallRating] = useState(0);
   const [styles, setStyles] = useState<Style[] | null>(null);
   const [currStyle, setCurrStyle] = useState<number>(0);
   const [loading, setLoading] = useState(true); // Unified loading state for all

@@ -1,30 +1,43 @@
-import prisma  from '@/db';
-import { NextResponse } from 'next/server';
+import prisma from '@/db';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
-  const prod = await prisma.product.findMany({
-   include:{
-    styles:{
-      include :{
-        images : {
-          orderBy :{
-            url: 'asc'
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const productIds = url.searchParams.get("ids")?.split(",");
+
+  if (productIds) {
+    const prod = await prisma.product.findMany({
+      where: { id: { in: productIds } },
+      include: { styles: { include: { images: {orderBy:{url:"asc"}} } } },
+    });
+    return NextResponse.json({
+      msg: prod
+    });
+  }
+  else {
+
+    const prod = await prisma.product.findMany({
+      include: {
+        styles: {
+          include: {
+            images: {
+              orderBy: {
+                url: 'asc'
+              }
+            },
           }
-        }, 
+        },
+        categories: true
       }
-    },
-    categories:true
-   }
-  })
-  return NextResponse.json({
-    msg : prod
-  });
+    })
+    return NextResponse.json({
+      msg: prod
+    });
+  }
 }
 
-// This function will handle the DELETE request
 export async function DELETE(request: Request) {
   try {
-    // Extract the product ID from the request URL
     const { searchParams } = new URL(request.url);
     const productId = searchParams.get('productId');
 
@@ -32,7 +45,6 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Product ID is required' }, { status: 400 });
     }
 
-    // Delete the product and its related data from the database
     await prisma.product.delete({
       where: {
         id: productId,

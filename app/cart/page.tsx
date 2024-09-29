@@ -104,7 +104,7 @@ export default function Home() {
   
   return (
     <div>
-      {JSON.stringify(session)}
+      {/* {JSON.stringify(session)} */}
       <AppBar setProducts={null} cartLength={cart?.items.length || null} />
       <div className="flex flex-col md:flex-row m-5">
         <div className="flex-1 md:mx-20">
