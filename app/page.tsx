@@ -1,12 +1,11 @@
-"use client";
-import { useState, useEffect, useCallback } from "react";
-import { ShoppingCart, Search, Menu, ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Suspense } from 'react';
 import { Footer } from "@/components/footer/Footer";
 import { AppBar } from "@/components/appbar/AppBar";
-import axios from "axios";
 import { Product } from "@/components/types/productType";
+import HeroSection from '@/components/HeroSection';
+import FeaturedProducts from '@/components/FeaturedProducts';
+import NewArrivals from '@/components/NewArrival';
+import ShopByCategory from '@/components/ShopByCategory';
 
 const featured = [
   "593d8f7f-3c7a-41bf-8bd0-e03c3979437e",
@@ -23,259 +22,31 @@ const newArrival = [
   "8787f1ec-b540-4429-a098-14c69cfa93cf",
 ];
 
-export default function Component() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[] | null>([]);
-  const [newProducts, setNewProducts] = useState<Product[] | null>([]);
-  const slides = [
-    {
-      image: "/placeholder.svg?height=600&width=1200",
-      title: "Welcome to Merch Plus",
-      description:
-        "Discover the best collection of anime merchandise. From figurines to apparel, we've got it all!",
-    },
-    {
-      image: "/placeholder.svg?height=600&width=1200",
-      title: "New Arrivals",
-      description: "Check out our latest anime collectibles and merchandise!",
-    },
-    {
-      image: "/placeholder.svg?height=600&width=1200",
-      title: "Limited Time Offer",
-      description: "Get 20% off on all manga series this week only!",
-    },
-  ];
+async function fetchProducts(ids: string[]): Promise<Product[]> {
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products?ids=${ids.join(",")}`, { next: { revalidate: 3600 } });
+  if (!res.ok) {
+    throw new Error('Failed to fetch products');
+  }
+  const data = await res.json();
+  return data.msg;
+}
 
-  const handleSlideChange = useCallback(
-    (direction: "prev" | "next") => {
-      setCurrentSlide((prev) =>
-        direction === "next"
-          ? (prev + 1) % slides.length
-          : (prev - 1 + slides.length) % slides.length
-      );
-    },
-    [slides.length]
-  );
-
-  useEffect(() => {
-    const timer = setInterval(() => handleSlideChange("next"), 5000);
-    return () => clearInterval(timer);
-  }, [handleSlideChange]);
-
-  const fetchProducts = useCallback(async (ids: string[], setter: Function) => {
-    try {
-      const res = await axios.get(`/api/products?ids=${ids.join(",")}`);
-      setter(res.data.msg);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchProducts(featured, setFeaturedProducts);
-    fetchProducts(newArrival, setNewProducts);
-  }, [fetchProducts]);
+export default async function Home() {
+  const featuredProducts = await fetchProducts(featured);
+  const newProducts = await fetchProducts(newArrival);
 
   return (
-    <div className="flex flex-col min-h-screen ">
-  <AppBar setProducts={null} cartLength={null} />
-  <main className="flex-1 w-full justify-center  ">
-    {/* Hero Section */}
-    <section className="w-full bg-black rounded relative ">
-      <div className="relative h-[400px] sm:h-[500px] md:h-[600px] rounded overflow-hidden">
-        {/* Background Video */}
-        <video
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-        >
-          <source src="videos/Landing.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-              <div className="text-center text-white space-y-4 max-w-4xl px-4">
-                <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tighter">
-                  {slide.title}
-                </h1>
-                <p className="mx-auto max-w-[600px] text-gray-300 md:text-xl">
-                  {slide.description}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                  <Link
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-white px-8 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-gray-100"
-                    href="/catalog"
-                  >
-                    Shop Now
-                  </Link>
-                  <Link
-                    className="inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white bg-opacity-20 px-8 text-sm font-medium text-white shadow-sm transition-colors hover:bg-opacity-30"
-                    href="#"
-                  >
-                    Learn More
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Slider Navigation */}
-      <button
-        onClick={() => handleSlideChange("prev")}
-        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 shadow-lg hover:bg-opacity-75"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-6 w-6 text-gray-800" />
-      </button>
-      <button
-        onClick={() => handleSlideChange("next")}
-        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 shadow-lg hover:bg-opacity-75"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-6 w-6 text-gray-800" />
-      </button>
-
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full ${
-              index === currentSlide ? "bg-white" : "bg-gray-400"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
-    </section>
-
-    {/* Featured Products Section */}
-    <section className="w-full py-12 md:py-18 lg:py-24 bg-gray-100">
-      <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter text-center mb-8">
-          Featured Products
-        </h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {featuredProducts?.map((prod: Product, i) => {
-            const url =
-              prod.styles[0].images[0].url +
-              process.env.NEXT_PUBLIC_AZURE_BLOB_TOKEN;
-            return (
-              <div
-                key={i}
-                className="relative group overflow-hidden rounded-lg shadow-lg"
-              >
-                <Link href={`/product/${prod.id}`}>
-                  <Image
-                    alt={`Product ${i}`}
-                    className="object-cover w-full h-60"
-                    height={240}
-                    src={url}
-                    width={240}
-                  />
-                  <div className="absolute inset-0 flex items-end justify-center p-4 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                    <h3 className="text-lg font-semibold text-white">
-                      {prod.name}
-                    </h3>
-                  </div>
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-
-    {/* New Arrivals Section */}
-    <section className="w-full py-12 md:py-18 lg:py-24 bg-white">
-      <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter text-center mb-8">
-          New Arrivals
-        </h2>
-        <div className="relative">
-          <div className="flex overflow-x-scroll space-x-4 p-4 scrollbar-hidden">
-            {newProducts?.map((prod: Product, i) => {
-              const url =
-                prod.styles[0].images[0].url +
-                process.env.NEXT_PUBLIC_AZURE_BLOB_TOKEN;
-
-              return (
-                <div key={i} className="flex-none w-48 sm:w-56">
-                  <Link href={`/product/${prod.id}`}>
-                    <div className="relative group overflow-hidden rounded-lg shadow-lg">
-                      <Image
-                        alt={`New Arrival ${i}`}
-                        className="object-cover w-full h-64"
-                        height={256}
-                        src={url}
-                        width={256}
-                      />
-                      <div className="absolute inset-0 flex items-end justify-center p-4 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        <h3 className="text-lg font-semibold text-white">
-                          {prod.name}
-                        </h3>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-          <button className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg">
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg">
-            <ChevronRight className="h-6 w-6" />
-          </button> 
-        </div>
-      </div>
-    </section>
-
-    {/* Shop by Category Section */}
-    <section className="w-full py-12 md:py-18 lg:py-24 bg-gray-100">
-      <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter text-center mb-8">
-          Shop by Category
-        </h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {["Figurine", "Apparel", "Accessories", "Manga"].map(
-            (category, i) => (
-              <Link
-                href={`/catalog/filters/category/${category}`}
-                key={i}
-                className="relative group overflow-hidden rounded-lg shadow-lg"
-              >
-                <Image
-                  alt={category}
-                  className="object-cover w-full h-48"
-                  height={192}
-                  src={`/images/placeholder${i}.jpg`}
-                  width={256}
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                  <h3 className="text-xl font-semibold text-white">
-                    {category}
-                  </h3>
-                </div>
-              </Link>
-            )
-          )}
-        </div>
-      </div>
-    </section>
-  </main>
-  <Footer />
-</div>
-
+    <div className="flex flex-col min-h-screen">
+      <AppBar setProducts={null} cartLength={null} />
+      <main className="flex-1 w-full justify-center">
+        <Suspense fallback={<div>Loading...</div>}>
+          <HeroSection />
+        </Suspense>
+        <FeaturedProducts products={featuredProducts} />
+        <NewArrivals products={newProducts} />
+        <ShopByCategory />
+      </main>
+      <Footer />
+    </div>
   );
 }

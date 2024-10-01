@@ -44,13 +44,12 @@ export default function Home() {
     const populateProducts = async () => {
       if (cart && cart.items.length > 0) {
         try {
-          const productRequests = cart.items.map(item =>
-            axios.get(`/api/products/${item.productId}`)
-          );
-          const productResponses = await Promise.all(productRequests);
-          const fetchedProducts = productResponses.map(response => response.data.prod);
+          const productIds = cart.items.map(item => item.productId).join(",");
+          const response = await axios.get(`/api/products?ids=${productIds}`);
+          const fetchedProducts = response.data.msg;
+
           const newTotal = fetchedProducts.reduce(
-            (sum, prod, idx) =>
+            (sum:number, prod:Product, idx:number) =>
               sum + prod.styles[cart.items[idx].styleIdx].price * cart.items[idx].quantity,
             0
           );
@@ -101,7 +100,7 @@ export default function Home() {
       </div>
     );
   }
-  
+
   return (
     <div>
       {/* {JSON.stringify(session)} */}
