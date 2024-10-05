@@ -75,6 +75,7 @@ export default function ProductInfo({ product, currStyle, setCurrStyle, styles, 
     <div className="flex flex-col m-3 overflow-auto max-h-screen relative">
       <div className="overflow-auto scrollbar-hidden max-h-full">
         <div className="text-2xl lg:text-3xl p-2 font-bold text-wrap">{product.name}</div>
+        
         <div className="flex items-center text-xs px-2">
           <RatingStars rating={overallRating} canHover={false} setRating={null} />
           <div className="flex p-1 font-semibold">

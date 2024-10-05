@@ -26,13 +26,13 @@ export default function ProductDetails() {
 
       try {
         const productResponse = await axios.get(`/api/products/${pid}`);
-        setProduct(productResponse.data.prod);
+        setProduct(productResponse.data.msg);
         
-        if (productResponse.data.prod) {
-          const stylesResponse = await axios.get(`/api/products/styles/${productResponse.data.prod.id}`);
+        if (productResponse.data.msg) {
+          const stylesResponse = await axios.get(`/api/products/styles/${productResponse.data.msg.id}`);
           setStyles(stylesResponse.data.prod);
         }
-
+      
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -109,6 +109,7 @@ export default function ProductDetails() {
 
   return (
     <div>
+      
       <AppBar setProducts={null} cartLength={null} />
       
       {/* Breadcrumbs/PathName */}
