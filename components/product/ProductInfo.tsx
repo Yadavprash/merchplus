@@ -34,7 +34,7 @@ export default function ProductInfo({ product, currStyle, setCurrStyle, styles, 
 
   const guestLogin = async () => {
     const res = await signIn("guest", {
-      redirect: true,
+      redirect: false,
   });
     closeModal();
   };

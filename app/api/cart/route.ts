@@ -82,21 +82,33 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: Request) {
   const url = new URL(req.url);
-  const id = url.searchParams.get("cartItemId") || "";
+  const cartItemId = url.searchParams.get("cartItemId") || "";
   const userId = url.searchParams.get("userId") || "";
-  
+
+  if (!cartItemId) {
+    return NextResponse.json({ msg: "Cart item ID is required" }, { status: 400 });
+  }
+
   try {
-    await prisma.cartItem.delete({
-      where: { id },
+    const cartItem = await prisma.cartItem.findUnique({
+      where: { id: cartItemId }
     });
 
-    // Invalidate the cache for the user's cart
+    if (!cartItem) {
+      return NextResponse.json({ msg: "Cart item not found" }, { status: 404 });
+    }
+
+    await prisma.cartItem.delete({
+      where: { id: cartItemId },
+    });
+
     await redisClient.del(`cart_${userId}`);
 
     return NextResponse.json({
       msg: "Item removed from cart"
     });
   } catch (error) {
+    console.error("Error removing item from cart:", error);
     return NextResponse.json({
       msg: "Cannot remove item from cart"
     }, { status: 500 });

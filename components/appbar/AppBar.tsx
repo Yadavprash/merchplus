@@ -109,11 +109,9 @@ export const AppBar = ({
             {menuOpen ? <HiX size={28} /> : <HiMenu size={28} />}
           </button>
         </div>
-          {path !== "/" && (
             <div className="flex items-center">
               <ShopingBag cartSize={cartLength} />
             </div>
-          )}
           </div>
       </nav>
 

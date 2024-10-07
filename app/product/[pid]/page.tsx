@@ -18,19 +18,18 @@ export default function ProductDetails() {
   const [overallRating, setOverallRating] = useState(0);
   const [styles, setStyles] = useState<Style[] | null>(null);
   const [currStyle, setCurrStyle] = useState<number>(0);
-  const [loading, setLoading] = useState(true); // Unified loading state for all
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // Start loading
+      setLoading(true); 
 
       try {
         const productResponse = await axios.get(`/api/products/${pid}`);
-        setProduct(productResponse.data.msg);
-        
-        if (productResponse.data.msg) {
-          const stylesResponse = await axios.get(`/api/products/styles/${productResponse.data.msg.id}`);
-          setStyles(stylesResponse.data.prod);
+        if (productResponse.data.prod) {
+          // console.log(productResponse.data.prod)
+          setProduct(productResponse.data.prod);
+          setStyles(productResponse.data.prod.styles);
         }
       
       } catch (error) {
@@ -75,6 +74,7 @@ export default function ProductDetails() {
   if (loading) {
     return (
       <div>
+        
         <AppBar setProducts={null} cartLength={null} />
         
         {/* Breadcrumbs/PathName */}
@@ -111,7 +111,7 @@ export default function ProductDetails() {
     <div>
       
       <AppBar setProducts={null} cartLength={null} />
-      
+      {/* {JSON.stringify(product)} */}
       {/* Breadcrumbs/PathName */}
       <div className='flex justify-center'>
         <div className='w-full md:w-2/3 px-4'>

@@ -3,6 +3,7 @@ import { Product } from "../types/productType";
 import Image from "next/image";
 import { useState } from "react";
 import { SkeletonCartItem } from "../skeletons";
+import { useSession } from "next-auth/react";
 
 interface CartItemProps {
   item: Product;
@@ -28,12 +29,14 @@ export const CartItem = ({
     : "https://picsum.photos/500/500";
 
   const [isDeleting, setIsDeleting] = useState(false);
+  const { data: session, status } = useSession();
+  const userId = session?.user.id;
 
   async function handleDelete() {
     try {
       setIsDeleting(true);
       const response = await axios.delete(
-        `/api/cart?cartItemId=${cartItemId}`
+        `/api/cart?userId=${userId}&cartItemId=${cartItemId}`
       );
       console.log("Item deleted:", response.data);
       onDelete(cartItemId);
@@ -52,6 +55,7 @@ export const CartItem = ({
 
   return (
     <div className={`flex flex-col space-y-1 mb-2 pb-2 md:flex-row border-b ${isDeleting ? "opacity-50" : ""}`}>
+      {/* {cartItemId} */}
       <div className="my-2 md:w-1/3 w-full flex justify-center">
         <Image
           width={200}

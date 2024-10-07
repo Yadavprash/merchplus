@@ -20,7 +20,6 @@ declare module "next-auth" {
 
 export default function Home() {
   const [cart, setCart] = useState<Cart | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
@@ -38,34 +37,17 @@ export default function Home() {
     };
 
     fetchCart();
+    setLoading(false);
+    
   }, [status, session]);
 
   useEffect(() => {
-    const populateProducts = async () => {
-      if (cart && cart.items.length > 0) {
-        try {
-          const productIds = cart.items.map(item => item.productId).join(",");
-          const response = await axios.get(`/api/products?ids=${productIds}`);
-          const fetchedProducts = response.data.msg;
-
-          const newTotal = fetchedProducts.reduce(
-            (sum:number, prod:Product, idx:number) =>
-              sum + prod.styles[cart.items[idx].styleIdx].price * cart.items[idx].quantity,
-            0
-          );
-          setProducts(fetchedProducts);
-          setTotal(newTotal);
-        } catch (e) {
-          console.error("Error fetching products:", e);
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-      }
-    };
-
-    populateProducts();
+    if (cart && cart.items) {
+      const newTotal = cart.items.reduce((sum, item) => {
+        return sum + item.product.styles[item.styleIdx].price * item.quantity;
+      }, 0);
+      setTotal(newTotal);
+    }
   }, [cart]);
 
   const handleItemDelete = (cartItemId: string) => {
@@ -103,7 +85,7 @@ export default function Home() {
 
   return (
     <div>
-      {/* {JSON.stringify(session)} */}
+      {/* {JSON.stringify(cart?.items)} */}
       <AppBar setProducts={null} cartLength={cart?.items.length || null} />
       <div className="flex flex-col md:flex-row m-5">
         <div className="flex-1 md:mx-20">
@@ -114,22 +96,22 @@ export default function Home() {
               </div>
               <CartHeader />
               <div>
-                {cart?.items.length === products.length && Array.isArray(cart?.items) &&
-                  products.map((product, idx) => (
+                {cart?.items &&  Array.isArray(cart?.items) &&
+                  cart.items.map((item, idx) => (
                     <CartItem
                       key={idx}
-                      cartItemId={cart.items[idx].id}
-                      quantity={cart.items[idx].quantity}
-                      item={product}
-                      styleIdx={cart.items[idx].styleIdx}
-                      sizeIdx={cart.items[idx].sizeIdx}
+                      cartItemId={item.id}
+                      quantity={item.quantity}
+                      item={item.product}
+                      styleIdx={item.styleIdx}
+                      sizeIdx={item.sizeIdx}
                       onDelete={handleItemDelete}
                     />
                   ))
                 }
               </div>
             </div>
-            {cart?.items.length === products.length && (
+            {cart?.items && (
               <div className="col-span-1 bg-white rounded p-5">
                 <div className="text-2xl font-bold mb-4">Order Summary</div>
                 <div className="flex justify-between mb-2 pb-3 border-b">

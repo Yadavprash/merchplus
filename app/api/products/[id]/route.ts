@@ -4,14 +4,14 @@ import { NextRequest,NextResponse } from 'next/server';
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const prodId = params.id;
 
-  const cacheKey = `products:${prodId}`;
+  const cacheKey = `product:${prodId}`;
 
   try{
     const cacheData = await redisClient.get(cacheKey);
 
     if(cacheData){
       return NextResponse.json({
-        msg: JSON.parse(cacheData),
+        prod: JSON.parse(cacheData),
         fromCache:true
       });
     }
@@ -34,10 +34,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       }
     }
   })
-
+  console.log(prod)
   await redisClient.set(cacheKey,JSON.stringify(prod),{EX:3600});
   return NextResponse.json({
-    msg: prod,
+    prod,
     fromCache:false
   });
 }catch (error) {
