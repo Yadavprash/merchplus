@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { Product, Category } from "@/components/types/productType";
 import { AppBar } from "@/components/appbar/AppBar";
 import { Footer } from "@/components/footer/Footer";
-import { PathName } from '@/components/PathName';
+import { BreadCrumbs } from '@/components/BreadCrumbs';
 import CatalogClient from '@/components/CatalogClient';
 import Skeleton from 'react-loading-skeleton';
 
@@ -34,7 +34,7 @@ export default async function CatalogPage() {
     <div>
       <AppBar setProducts={null} cartLength={null} />
       <div className="flex flex-col w-full md:w-2/3 mx-auto px-4">
-        <PathName />
+        <BreadCrumbs />
         <Suspense fallback={<Skeleton />}>
           <CatalogClient initialProducts={products} categories={categories} />
         </Suspense>

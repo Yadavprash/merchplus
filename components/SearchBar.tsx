@@ -26,21 +26,11 @@ export const SearchBar = ({setProducts}:{setProducts : React.Dispatch<React.SetS
           } catch (error) {
             console.error("Error fetching search results:", error);
           }
-        } else {
-          // try {
-          //   const response = await axios.get("/api/products");
-            
-          //   const data = response.data.msg;
-          //   setProducts(data)
-          // } catch (error) {
-          //   console.error("Error fetching search results:", error);
-          // }
-          // console.warn("Query is empty, not sending a request.");
-        }
+        } 
       };
       
       fetchResults();
-    },[query, debouncedQuery,setProducts]);
+    },[debouncedQuery,setProducts]);
     return (
       <div className="border rounded bg-primary focus-within:border-black">
         <div className="relative flex items-center h-8  rounded py-5 overflow-hidden">

@@ -7,7 +7,7 @@ import { Category, Product } from "@/components/types/productType";
 import Link from "next/link";
 import { Footer } from "@/components/footer/Footer";
 import { useParams } from 'next/navigation';
-import { PathName } from '@/components/PathName';
+import { BreadCrumbs } from '@/components/BreadCrumbs';
 import axios from 'axios';
 import SortProducts from '@/components/SortBy';
 import GridColumnToggle from '@/components/GridColumnToggle';
@@ -92,7 +92,7 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex flex-col w-full md:w-2/3 mx-auto px-4">
-        <PathName />
+        <BreadCrumbs />
 
         <div className="flex-1 md:flex justify-between items-center font-sans text-sm mb-4">
           <div className="flex space-x-2">

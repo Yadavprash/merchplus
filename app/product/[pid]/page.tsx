@@ -8,7 +8,7 @@ import { Gallery } from "@/components/gallery/gallery";
 import ProductInfo from "@/components/product/ProductInfo";
 import { Reviews } from '@/components/reviews/Reviews';
 import { Footer } from '@/components/footer/Footer';
-import { PathName } from '@/components/PathName';
+import { BreadCrumbs } from '@/components/BreadCrumbs';
 
 export default function ProductDetails() {
   const searchParams = useParams();
@@ -35,7 +35,7 @@ export default function ProductDetails() {
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
-        setLoading(false); // End loading when both product and styles are fetched
+        setLoading(false); 
       }
     };
 
@@ -77,10 +77,10 @@ export default function ProductDetails() {
         
         <AppBar setProducts={null} cartLength={null} />
         
-        {/* Breadcrumbs/PathName */}
+        {/* Breadcrumbs/BreadCrumbs */}
         <div className='flex justify-center'>
           <div className='w-full md:w-2/3 px-4'>
-            <PathName />
+            <BreadCrumbs />
           </div>
         </div>
 
@@ -112,10 +112,10 @@ export default function ProductDetails() {
       
       <AppBar setProducts={null} cartLength={null} />
       {/* {JSON.stringify(product)} */}
-      {/* Breadcrumbs/PathName */}
+      {/* Breadcrumbs/BreadCrumbs */}
       <div className='flex justify-center'>
         <div className='w-full md:w-2/3 px-4'>
-          <PathName />
+          <BreadCrumbs />
         </div>
       </div>
 

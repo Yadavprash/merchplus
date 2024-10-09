@@ -1,15 +1,18 @@
 "use client"
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
-export const PathName = () => {
+export const BreadCrumbs = () => {
     const path = usePathname();
     const segments = useMemo(() => path?.split('/').filter(Boolean).filter(segment => !["filters", "category"].includes(segment)), [path]);
 
     return (
         <div className='flex items-center text-sm my-2 p-2 rounded border font-sans text-gray-800'>
             <div className='flex items-center'>
+                <Link href='/'>
                 <span className='font-medium'>Home</span>
+                </Link>
                 <svg
                     fill="#000000"
                     version="1.1"
@@ -26,7 +29,9 @@ export const PathName = () => {
             </div>
             {segments &&  segments.map((segment, index) => (
                 <div key={index} className='flex items-center'>
+                    <Link href={'/catalog'}>
                     <span className='font-medium capitalize'>{segment}</span>
+                    </Link>
                     {index < segments.length - 1 && (
                         <svg
                             fill="#000000"

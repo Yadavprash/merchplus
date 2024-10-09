@@ -33,7 +33,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           className={`w-full h-[300px] object-cover transition-opacity duration-300 ${
             imageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
-          onLoadingComplete={() => setImageLoaded(true)}
+          onLoad={() => setImageLoaded(true)}
         />
       )}
       <div className="p-4">

@@ -47,7 +47,7 @@ export default function ProductInfo({ product, currStyle, setCurrStyle, styles, 
 
     await axios.post("/api/cart", {
       userId: (session?.user as { id: string }).id,
-      productId: product.id,
+    productId: product.id,
       quantity: 1,
       styleIdx: currStyle,
       sizeIdx: selectedSize,

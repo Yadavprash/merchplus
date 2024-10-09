@@ -10,6 +10,7 @@ import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import Link from 'next/link';
 
 // Form validation schema using Zod
 const checkoutSchema = z.object({
@@ -185,7 +186,9 @@ const CheckoutPage = () => {
                                                         className="object-cover rounded"
                                                     />
                                                     <div>
-                                                        <h3 className="font-medium">{item.product.name}</h3>
+                                                        <Link href={`/product/${item.product.id}`}>
+                                                        <h3 className="font-medium">{item.product.name.length > 50 ?item.product.name.substring(0,50) + "...":item.product.name}</h3>
+                                                        </Link>
                                                         <p className="text-sm">Style: {productStyle.name}</p>
                                                         <p className="text-sm">Size: {item.product.size[item.sizeIdx]}</p>
                                                         <p className="text-sm">Quantity: {item.quantity}</p>

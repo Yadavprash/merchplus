@@ -62,15 +62,36 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const cartItem = await prisma.cartItem.create({
-    data: {
-      cartId: cart.id,
+  const fountItem = await prisma.cartItem.findFirst({
+    where:{
+      cartId : cart.id,
       productId,
-      quantity,
       styleIdx,
       sizeIdx
     }
-  });
+  })
+
+  if(fountItem){
+    const cartItem = await prisma.cartItem.update({
+      where:{
+        id : fountItem.id
+      },
+      data:{
+        quantity: quantity
+      }
+    })
+  }else{
+    const cartItem = await prisma.cartItem.create({
+      data: {
+        cartId: cart.id,
+        productId,
+        quantity,
+        styleIdx,
+        sizeIdx
+      }
+    });
+  }
+
 
   // Invalidate the cache for the user's cart
   await redisClient.del(`cart_${userId}`);
