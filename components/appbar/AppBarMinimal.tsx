@@ -38,7 +38,7 @@ export const AppBarMinimal = ({ cartLength}:{cartLength : number | null}) => {
 
           {path !== "/" && (
             <div className="flex items-center">
-              <ShopingBag cartSize = {cartLength} />
+              <ShopingBag  />
             </div>
           )}
         </div>
