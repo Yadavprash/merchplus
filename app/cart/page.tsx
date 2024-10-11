@@ -4,11 +4,14 @@ import { CartHeader } from "@/components/cart/CartHeader";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Cart, Product } from "@/components/types/productType";
+import { Cart } from "@/components/types/productType";
 import { DefaultSession } from "next-auth";
 import { CartItem } from "@/components/cart/CartItem";
 import Link from "next/link";
 import { SkeletonCartItem, SkeletonSummary } from "@/components/skeletons";
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store/store';
+import { setCount } from '@/store/features/cartSlice';
 
 declare module "next-auth" {
   interface Session {
@@ -23,6 +26,7 @@ export default function Home() {
   const [total, setTotal] = useState(0);
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
+  const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -47,6 +51,7 @@ export default function Home() {
         return sum + item.product.styles[item.styleIdx].price * item.quantity;
       }, 0);
       setTotal(newTotal);
+      dispatch(setCount(cart.items.length));
     }
   }, [cart]);
 
@@ -62,7 +67,7 @@ export default function Home() {
   if (status === "loading" || loading) {
     return (
       <div>
-        <AppBar setProducts={null} cartLength={cart?.items.length || null} />
+        <AppBar  />
         <div className="flex flex-col md:flex-row m-5">
           <div className="flex-1 md:mx-20">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -86,7 +91,7 @@ export default function Home() {
   return (
     <div>
       {/* {JSON.stringify(cart?.items)} */}
-      <AppBar setProducts={null} cartLength={cart?.items.length || null} />
+      <AppBar  />
       <div className="flex flex-col md:flex-row m-5">
         <div className="flex-1 md:mx-20">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">

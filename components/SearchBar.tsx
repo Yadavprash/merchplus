@@ -1,10 +1,19 @@
 "use client"
-import axios from "axios";
 import {  useEffect, useState } from "react";
-import { Product } from "@/components/types/productType"
-export const SearchBar = ({setProducts}:{setProducts : React.Dispatch<React.SetStateAction<Product[]>> | null}) => {
+import { Product } from "@/components/types/productType";
+import axios from "axios";
+import { usePathname,useRouter } from "next/navigation";
+import { setProducts } from "@/store/features/productSlice";
+import { useDispatch } from "react-redux";
+
+
+export const SearchBar = () => {
     const [query,setQuery] = useState("");
     const [debouncedQuery,setDebouncedQuery] = useState("");
+    const path = usePathname();
+    const router = useRouter();
+    const dispatch = useDispatch();
+
     useEffect(()=>{
       const timerId = setTimeout(()=>{
         setDebouncedQuery(query);
@@ -19,10 +28,15 @@ export const SearchBar = ({setProducts}:{setProducts : React.Dispatch<React.SetS
       const fetchResults = async () => {
         if (query.length && setProducts) {
           try {
-            const response = await axios.post("/api/products/search", { query });
+            const response = await axios.post("/api/products/search", { query :debouncedQuery });
             
             const data = response.data.products;
-            setProducts(data)
+        `1267`
+            dispatch(setProducts(data));
+            console.log(path);
+            if(path.startsWith("/product")){
+              router.push("/catalog/search");
+            }
           } catch (error) {
             console.error("Error fetching search results:", error);
           }

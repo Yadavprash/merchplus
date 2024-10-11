@@ -31,13 +31,15 @@ async function fetchProducts(ids: string[]): Promise<Product[]> {
   return data.msg;
 }
 
+
+
 export default async function Home() {
   const featuredProducts = await fetchProducts(featured);
   const newProducts = await fetchProducts(newArrival);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <AppBar setProducts={null} cartLength={null} />
+      <AppBar   />
       <main className="flex-1 w-full justify-center">
         <Suspense fallback={<div>Loading...</div>}>
           <HeroSection />

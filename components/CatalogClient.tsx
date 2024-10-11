@@ -8,20 +8,21 @@ import GridColumnToggle from '@/components/GridColumnToggle';
 import Filters from '@/components/Filters';
 import { Product, Category } from "@/components/types/productType";
 import Skeleton from 'react-loading-skeleton';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { setProducts } from '@/store/features/productSlice';
 
 
 
-export default function CatalogClient({ initialProducts, categories }: { initialProducts: Product[], categories: Category[] }) {
-    const [products, setProducts] = useState(initialProducts);
+export default function CatalogClient({ categories  }: { categories: Category[] | undefined
+}) {
     const [showFilter, setShowFilter] = useState(false);
     const [gridCols, setGridCols] = useState("4");
     const [isLoading, setIsLoading] = useState(true);
-
+    const products = useSelector((state:RootState) => state.products.products);
     useEffect(() => {
         setIsLoading(false);
     }, []);
-
-
 
     return <div>
         <div
@@ -45,7 +46,7 @@ export default function CatalogClient({ initialProducts, categories }: { initial
                                 <Skeleton height={20} width={`100%`} count={8} />
                             </>
                         ) : (
-                            <Filters categories={categories} products={products} setFilteredProducts={setProducts} />
+                            <Filters categories={categories} products={products}  />
                         )}
                     </div>
                 </div>
@@ -68,7 +69,7 @@ export default function CatalogClient({ initialProducts, categories }: { initial
                 {isLoading ? (
                     <Skeleton height={30} width={100} />
                 ) : (
-                    <SortProducts products={products} setProducts={setProducts} />
+                    <SortProducts products={products} setProducts={setProducts}  />
                 )}
             </div>
             {isLoading ? (

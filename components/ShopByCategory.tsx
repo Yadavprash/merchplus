@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function ShopByCategory() {
+  
   return (
     <section className="w-full py-12 md:py-18 lg:py-24 bg-gray-100">
       <div className="container mx-auto px-4 md:px-6">

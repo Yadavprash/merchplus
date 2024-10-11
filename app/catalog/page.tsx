@@ -1,10 +1,8 @@
 import { Suspense } from 'react';
 import { Product, Category } from "@/components/types/productType";
-import { AppBar } from "@/components/appbar/AppBar";
 import { Footer } from "@/components/footer/Footer";
-import { BreadCrumbs } from '@/components/BreadCrumbs';
-import CatalogClient from '@/components/CatalogClient';
 import Skeleton from 'react-loading-skeleton';
+import CatalogManager from '@/components/CatalogManager'; 
 
 async function fetchProducts(): Promise<Product[]> {
   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products`, { next: { revalidate: 3600 } });
@@ -32,13 +30,10 @@ export default async function CatalogPage() {
 
   return (
     <div>
-      <AppBar setProducts={null} cartLength={null} />
-      <div className="flex flex-col w-full md:w-2/3 mx-auto px-4">
-        <BreadCrumbs />
-        <Suspense fallback={<Skeleton />}>
-          <CatalogClient initialProducts={products} categories={categories} />
-        </Suspense>
-      </div>
+      {/* Render client-side logic in CatalogManager */}
+      <Suspense fallback={<Skeleton />}>
+        <CatalogManager initialProducts={products} categories={categories} />
+      </Suspense>
       <Footer />
     </div>
   );

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Product, Category } from "@/components/types/productType";
+import { setProducts  } from '@/store/features/productSlice';
+import { useDispatch } from 'react-redux';
+
 
 interface FiltersProps {
   products: Product[];
-  setFilteredProducts: React.Dispatch<React.SetStateAction<Product[]>>;
-  categories: Category[];
+  categories: Category[] | undefined;
 }
 
 type PriceRangePreset = {
@@ -20,11 +22,12 @@ const priceRangePresets:PriceRangePreset[] = [
   { label: 'Reset Price', range: [0, 999999] }
 ];
 
-const Filters: React.FC<FiltersProps> = ({ products, setFilteredProducts, categories }) => {
+const Filters: React.FC<FiltersProps> = ({ products, categories }) => {
   // Filter states
   const [originalProducts] = useState(products);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([1000, 999999]);
+  const dispatch = useDispatch();
 
   // Handle category change
   const handleCategoryChange = (categoryId: string) => {
@@ -42,7 +45,7 @@ const handlePresetPriceRange = (min: number, max: number) => {
   const handleReset = () => {
     setSelectedCategories([]);
     setPriceRange([0, 99999]);
-    setFilteredProducts(originalProducts); // Restore original products
+    dispatch(setProducts(originalProducts)); // Restore original products
   };
 
   // Filtering logic
@@ -60,8 +63,8 @@ const handlePresetPriceRange = (min: number, max: number) => {
       return isInSelectedCategories && isWithinPriceRange;
     });
 
-    setFilteredProducts(filtered);
-  }, [selectedCategories, priceRange, setFilteredProducts, originalProducts]);
+    dispatch(setProducts(filtered));
+  }, [selectedCategories, priceRange, setProducts, originalProducts]);
   
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -69,7 +72,7 @@ const handlePresetPriceRange = (min: number, max: number) => {
   <div>
     <label className="block text-sm font-medium">Include Categories</label>
     <div className="flex flex-wrap gap-2 max-h-[400px] overflow-y-auto scroll-smooth mt-2">
-      {categories.map(category => (
+      {categories && categories.map(category => (
         <div
           key={category.id}
           onClick={() => handleCategoryChange(category.id)}

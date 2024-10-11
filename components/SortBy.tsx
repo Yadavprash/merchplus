@@ -1,36 +1,39 @@
 import React, { useState } from 'react';
 import { Product } from "@/components/types/productType";
+import { useDispatch } from 'react-redux';
+import { setProducts } from '@/store/features/productSlice';
 
 interface SortProductsProps {
   products: Product[];
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  setProducts : typeof setProducts
 }
 
 const SortProducts: React.FC<SortProductsProps> = ({ products, setProducts }) => {
   const [sortOption, setSortOption] = useState<string>('');
+  const dispatch = useDispatch();
 
   // Function to sort products by name ascending
   const sortByNameAsc = () => {
     const sortedProducts = [...products].sort((a, b) => a.name.localeCompare(b.name));
-    setProducts(sortedProducts);
+    dispatch(setProducts(sortedProducts));
   };
 
   // Function to sort products by name descending
   const sortByNameDesc = () => {
     const sortedProducts = [...products].sort((a, b) => b.name.localeCompare(a.name));
-    setProducts(sortedProducts);
+    dispatch(setProducts(sortedProducts));
   };
 
   // Function to sort products by price ascending
   const sortByPriceAsc = () => {
     const sortedProducts = [...products].sort((a, b) => a.styles[0].price - b.styles[0].price);
-    setProducts(sortedProducts);
+    dispatch(setProducts(sortedProducts));
   };
 
   // Function to sort products by price descending
   const sortByPriceDesc = () => {
     const sortedProducts = [...products].sort((a, b) => b.styles[0].price - a.styles[0].price);
-    setProducts(sortedProducts);
+    dispatch(setProducts(sortedProducts));
   };
 
   const sortByRatingDesc = () => {
@@ -39,7 +42,7 @@ const SortProducts: React.FC<SortProductsProps> = ({ products, setProducts }) =>
       const avgRatingB = b.reviews.reduce((acc, review) => acc + review.rating, 0) / b.reviews.length || 0;
       return avgRatingB - avgRatingA;
     });
-setProducts(sortedProducts);
+    dispatch(setProducts(sortedProducts));
   };
   
 

@@ -75,7 +75,7 @@ export default function ProductDetails() {
     return (
       <div>
         
-        <AppBar setProducts={null} cartLength={null} />
+        <AppBar  />
         
         {/* Breadcrumbs/BreadCrumbs */}
         <div className='flex justify-center'>
@@ -110,7 +110,7 @@ export default function ProductDetails() {
   return (
     <div>
       
-      <AppBar setProducts={null} cartLength={null} />
+      <AppBar  />
       {/* {JSON.stringify(product)} */}
       {/* Breadcrumbs/BreadCrumbs */}
       <div className='flex justify-center'>

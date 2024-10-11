@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db";
+import { redisClient } from "@/lib/redis";
 export async function POST(req:NextRequest){
     const {id,likes} = await req.json();
     
@@ -19,7 +20,6 @@ export async function POST(req:NextRequest){
                 likes
             }
         })    
-        
         return NextResponse.json(response);
     } catch (error) {
         return NextResponse.json({

@@ -194,7 +194,7 @@ export const Reviews = ({
           </div>
         </div>
       </div>
-      <AddReviewPopup productId={productId} isOpen={isPopupOpen} onClose={handleClosePopup} popupRef={popupRef} />
+      <AddReviewPopup productId={productId} isOpen={isPopupOpen} onClose={handleClosePopup} popupRef={popupRef} setReviews={setReviews}/>
     </div>
   );
 };

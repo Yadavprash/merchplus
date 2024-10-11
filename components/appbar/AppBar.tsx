@@ -5,8 +5,7 @@ import Image from "next/image";
 import { SearchBar } from "../SearchBar";
 import { ShopingBag } from "../shoppingbag";
 import { usePathname } from "next/navigation";
-import { Product } from "@/components/types/productType";
-import { HiMenu, HiX } from "react-icons/hi"; // Hamburger and close icons
+import { HiMenu, HiX } from "react-icons/hi"; 
 
 const navLinkClass =
   "px-4 py-2 hover:underline rounded transition-all duration-300 delay-100 ease-in-out underline-offset-[16px] decoration-teal-500 hover:text-teal-500 focus:ring-2 focus:ring-teal-500 transform hover:scale-105 hover:underline-offset-4 active:text-teal-500";
@@ -34,13 +33,7 @@ const Dropdown = ({ title, items }: DropdownTypes) => (
   </div>
 );
 
-export const AppBar = ({
-  setProducts,
-  cartLength,
-}: {
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>> | null;
-  cartLength: number | null;
-}) => {
+export const AppBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const path = usePathname();
   
@@ -75,9 +68,9 @@ export const AppBar = ({
         </Link>
         
         {/* Search Bar for larger screens */}
-        {path !== "/" && path !="/cart" &&  (
+        {path !== "/" && path !="/cart" && path !== "/product" &&  (
           <div className="hidden md:block w-1/3">
-            <SearchBar setProducts={setProducts} />
+            <SearchBar />
           </div>
         )}
 
@@ -110,7 +103,7 @@ export const AppBar = ({
           </button>
         </div>
             <div className="flex items-center">
-              <ShopingBag cartSize={cartLength} />
+              <ShopingBag/>
             </div>
           </div>
       </nav>
@@ -119,9 +112,9 @@ export const AppBar = ({
       {menuOpen && (
         <div className="md:hidden w-full bg-white shadow-lg rounded-md p-4 flex flex-col space-y-2 font-semibold text-stone-700">
           {/* Search Bar for mobile */}
-          {path !== "/" && (
+          {path !== "/" && path !== "/product" &&  (
             <div className="w-full mb-4">
-              <SearchBar setProducts={setProducts} />
+              <SearchBar  />
             </div>
           )}
 

@@ -14,17 +14,23 @@ import GridColumnToggle from '@/components/GridColumnToggle';
 import Filters from '@/components/Filters';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { setProducts } from '@/store/features/productSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+
 
 export default function Home() {
   const [loading, setLoading] = useState(true); 
   const [showFilter, setShowFilter] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [gridCols, setGridCols] = useState("4");
 
   const params = useParams<{ type: string; name: string }>();
   const filterType = params?.type;
   const filterName = params?.name;
+  const dispatch = useDispatch();
+  const products = useSelector((state:RootState) => state.products.products);
+  
 
   useEffect(() => {
     if (filterType) {
@@ -32,8 +38,8 @@ export default function Home() {
         try {
           const response = await axios.get(`/api/products/filters?${filterType}=${filterName}`);
           const products = response.data.products;
-          setFilteredProducts(products);
-          console.log(products);
+          dispatch(setProducts(products));
+          // console.log(products);
         } catch (error) {
           console.error('Error fetching products:', error);
         } finally {
@@ -45,7 +51,7 @@ export default function Home() {
         try {
           const response = await axios.get('/api/products/category');
           setCategories(response.data.categories);
-          console.log(response.data.categories);
+          // console.log(response.data.categories);
         } catch (error) {
           console.error('Error fetching categories:', error);
         }
@@ -80,7 +86,7 @@ export default function Home() {
                   <Skeleton height={20} width={`100%`} count={8} />
                 </>
               ) : (
-                <Filters categories={categories} products={filteredProducts} setFilteredProducts={setFilteredProducts} />
+                <Filters categories={categories} products={products} />
               )}
             </div>
           </div>
@@ -88,7 +94,7 @@ export default function Home() {
       </div>
 
       {/* AppBar */}
-      <AppBar setProducts={setFilteredProducts} cartLength={null} />
+      <AppBar  />
 
       {/* Main Content */}
       <div className="flex flex-col w-full md:w-2/3 mx-auto px-4">
@@ -106,7 +112,7 @@ export default function Home() {
             {loading ? (
               <Skeleton height={30} width={100} />
             ) : (
-              <SortProducts products={filteredProducts} setProducts={setFilteredProducts} />
+              <SortProducts products={products} setProducts={setProducts} />
             )}
           </div>
           {loading ? (
@@ -127,7 +133,7 @@ export default function Home() {
               </div>
             ))
           ) : (
-            filteredProducts.map((prod: Product) => (
+            products.map((prod: Product) => (
               prod.styles != null && (
                 <Link key={prod.id} href={`/product/${prod.id}`}>
                   <ProductCard product={prod} />

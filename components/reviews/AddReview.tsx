@@ -3,12 +3,14 @@ import { useState } from "react";
 import RatingStars from "@/components/RatingStar";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { Review } from "@/components/types/productType";
 
-export const AddReviewPopup = ({ productId, isOpen, onClose, popupRef }: {productId:string, isOpen: boolean, onClose: () => void, popupRef: React.MutableRefObject<HTMLDivElement | null> }) => {
+
+export const AddReviewPopup = ({ productId, isOpen, onClose, popupRef,setReviews }: {productId:string, isOpen: boolean, onClose: () => void, popupRef: React.MutableRefObject<HTMLDivElement | null> ,setReviews: React.Dispatch<React.SetStateAction<Review[]>> }) => {
     const [rating, setRating] = useState<number>(0);
     const [title, setTitle] = useState<string>("");
     const [review, setReview] = useState<string>("");
-    const { data: session, status } = useSession();    
+    const { data: session, status } = useSession();  
 
     const handleSubmit = async() => {
         console.log("hi")
@@ -21,7 +23,7 @@ export const AddReviewPopup = ({ productId, isOpen, onClose, popupRef }: {produc
                 username : session?.user.name,
                 userImage : session?.user.image
             })
-            console.log(response);
+            setReviews((reviews) => [...reviews,response.data]);
         } catch (error) {
             console.log(error)
         }
