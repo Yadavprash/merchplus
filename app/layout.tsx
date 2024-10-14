@@ -20,6 +20,10 @@ export default async function RootLayout({
   const session = await getServerSession(NEXT_AUTH_CONFIG);
   return (
     <html lang="en">
+      <head>
+       <title>Merch Plus</title>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={inter.className}>
        <Providers session={session}>
         {children}
