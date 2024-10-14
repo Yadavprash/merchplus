@@ -12,7 +12,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const imageUrl = isHovered
     ? product.styles[0].images && product.styles[0].images.length > 1
       ? product.styles[0].images[1].url + process.env.NEXT_PUBLIC_AZURE_BLOB_TOKEN
-      : product.styles[1].images[0].url + process.env.NEXT_PUBLIC_AZURE_BLOB_TOKEN 
+      : product.styles[1]? product.styles[1].images[0].url + process.env.NEXT_PUBLIC_AZURE_BLOB_TOKEN : "https://picsum.photos/400/500"
     : product.styles[0].images && product.styles[0].images.length > 0
     ? product.styles[0].images[0].url + process.env.NEXT_PUBLIC_AZURE_BLOB_TOKEN
     : '';

@@ -12,6 +12,10 @@ const featured = [
   "438bc178-5948-4b8b-9ec7-bc87c957432e",
   "7b8a3cb2-7866-4cf6-b0e6-e1ee5b2c606b",
   "d494e681-25a9-497a-89be-9fc313c43077",
+  "2bcd910b-8b9b-41bd-aa25-8613ce8cee0b",
+  "49582968-8c62-48e3-abf9-f97c0752d4b5",
+  "7efe8c70-d83c-4240-a831-6897cc66bd17",
+  "5039d1a0-2220-488e-ae6d-4902007f8779"
 ];
 const newArrival = [
   "33d13874-a51f-4c75-a577-20cbba273d04",
