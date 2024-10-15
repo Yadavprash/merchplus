@@ -28,7 +28,7 @@ jobs:
           node-version: '20.x'
 
       - name: Log partial secret
-         run: echo "NEXTAUTH_URL starts with ${NEXT_PUBLIC_APP_URL:0:5}"
+        run: echo "NEXTAUTH_URL starts with ${NEXT_PUBLIC_APP_URL:0:5}"
 
       - name: npm install, build, and test
         run: |
