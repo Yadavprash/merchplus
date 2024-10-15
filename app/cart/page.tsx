@@ -15,7 +15,7 @@ import { setCount } from '@/store/features/cartSlice';
 
 declare module "next-auth" {
   interface Session {
-    user: {
+    user: { 
       id: string;
     } & DefaultSession["user"];
   }
