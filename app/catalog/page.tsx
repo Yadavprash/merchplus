@@ -2,10 +2,10 @@ import { Suspense } from 'react';
 import { Product, Category } from "@/components/types/productType";
 import { Footer } from "@/components/footer/Footer";
 import Skeleton from 'react-loading-skeleton';
-import CatalogManager from '@/components/CatalogManager'; 
+import CatalogManager from '@/components/CatalogManager';
 
 async function fetchProducts(): Promise<Product[]> {
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products`, { next: { revalidate: 3600 } });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/products`, { next: { revalidate: 3600 } });
   if (!res.ok) {
     throw new Error('Failed to fetch products');
   }
@@ -14,7 +14,7 @@ async function fetchProducts(): Promise<Product[]> {
 }
 
 async function fetchCategories(): Promise<Category[]> {
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products/category`, { next: { revalidate: 3600 } });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/category`, { next: { revalidate: 3600 } });
   if (!res.ok) {
     throw new Error('Failed to fetch categories');
   }

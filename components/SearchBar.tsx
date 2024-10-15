@@ -28,7 +28,7 @@ export const SearchBar = () => {
       const fetchResults = async () => {
         if (query.length && setProducts) {
           try {
-            const response = await axios.post("/api/products/search", { query :debouncedQuery });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/search`, { query :debouncedQuery });
             
             const data = response.data.products;
         `1267`

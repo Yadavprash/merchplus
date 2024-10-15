@@ -11,7 +11,7 @@ export const ReviewCard = ({ review }: { review: Review }) => {
   const handleLikes = async () => {
     if (!liked) {
       try {
-        await axios.post("/api/reviews/likes", {
+        await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/reviews/likes`, {
           id: review.id,
           likes: review.likes + 1,
         });

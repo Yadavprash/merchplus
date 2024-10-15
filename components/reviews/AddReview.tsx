@@ -15,7 +15,7 @@ export const AddReviewPopup = ({ productId, isOpen, onClose, popupRef,setReviews
     const handleSubmit = async() => {
         console.log("hi")
         try {
-            const response = await axios.post("/api/reviews",{
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/reviews`,{
                 productId,
                 title,
                 review,

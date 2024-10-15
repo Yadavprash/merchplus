@@ -27,7 +27,7 @@ const newArrival = [
 ];
 
 async function fetchProducts(ids: string[]): Promise<Product[]> {
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products?ids=${ids.join(",")}`, { next: { revalidate: 3600 } });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/products?ids=${ids.join(",")}`, { next: { revalidate: 3600 } });
   if (!res.ok) {
     throw new Error('Failed to fetch products');
   }

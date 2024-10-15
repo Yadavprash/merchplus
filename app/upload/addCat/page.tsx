@@ -12,7 +12,7 @@ export default function AddCategory() {
     useEffect(() => {
         // Fetch products from the API
         async function fetchProducts() {
-            const res = await axios.get('/api/products');
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/products`);
             setProducts(res.data.msg);
         }
 
@@ -27,7 +27,7 @@ export default function AddCategory() {
 
         const categoryArray = categoryNames.split(',').map(name => name.trim());
 
-        const res = await fetch('/api/products/category', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/category`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

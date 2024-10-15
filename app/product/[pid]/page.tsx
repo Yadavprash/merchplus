@@ -25,7 +25,7 @@ export default function ProductDetails() {
       setLoading(true); 
 
       try {
-        const productResponse = await axios.get(`/api/products/${pid}`);
+        const productResponse = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/${pid}`);
         if (productResponse.data.prod) {
           // console.log(productResponse.data.prod)
           setProduct(productResponse.data.prod);
