@@ -20,6 +20,7 @@ jobs:
       GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
       GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
       REDIS_URL: ${{ secrets.REDIS_URL }}
+      NODE_ENV: production
     steps:
       - uses: actions/checkout@v4
 
@@ -34,7 +35,7 @@ jobs:
           echo "DATABASE_URL: $DATABASE_URL"
           echo "AZURE_STORAGE_CONNECTION_STRING: $AZURE_STORAGE_CONNECTION_STRING"
           echo "GOOGLE_CLIENT_ID: $GOOGLE_CLIENT_ID"
-          echo "REDIS_URL: $REDIS_URL"
+          echo "REDIS_URL: ${{ secrets.REDIS_URL }}"
         env:
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -43,6 +44,7 @@ jobs:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
+          NODE_ENV: production
 
       - name: npm install, build, and test
         run: |
