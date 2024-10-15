@@ -2,7 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Cart } from "@/components/types/productType"; 
+import { Cart } from "@/components/types/productType";
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { AppBarMinimal } from '@/components/appbar/AppBarMinimal';
@@ -35,7 +35,12 @@ const CheckoutPage = () => {
         const fetchCart = async () => {
             if (status === "authenticated" && session?.user?.id) {
                 try {
-                    const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/cart?userId=${session.user.id}`);
+                    const apiUrl = process.env.NEXT_PUBLIC_APP_URL;
+                    if (!apiUrl) {
+                        console.error("NEXT_PUBLIC_APP_URL is not set");
+                        return;
+                    }
+                    const response = await axios.get(`${apiUrl}/api/cart?userId=${session.user.id}`);
                     setCart(response.data.cart);
                 } catch (e) {
                     console.error("Error fetching cart:", e);
@@ -48,7 +53,7 @@ const CheckoutPage = () => {
         fetchCart();
     }, [status, session]);
 
-    const { register, handleSubmit,reset, formState: { errors } } = useForm<CheckoutForm>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<CheckoutForm>({
         resolver: zodResolver(checkoutSchema),
     });
 
@@ -59,17 +64,17 @@ const CheckoutPage = () => {
         }, 0).toFixed(2);
     };
 
-    const onSubmit  = (data:CheckoutForm) => {
+    const onSubmit = (data: CheckoutForm) => {
         setIsSubmitting(true);
-        
+
         // Simulating an API call or order processing
         setTimeout(() => {
-          console.log("Checkout data:", data);
-          setIsSubmitting(false);
-          setShowModal(true);  // Show success modal
-          reset(); // Reset form after submission
+            console.log("Checkout data:", data);
+            setIsSubmitting(false);
+            setShowModal(true);  // Show success modal
+            reset(); // Reset form after submission
         }, 1000);
-      };
+    };
 
     return (
         <div>
@@ -82,83 +87,83 @@ const CheckoutPage = () => {
                         {/* Billing Details Form */}
                         <div className="order-2 md:order-1">
                             <h2 className="text-2xl font-semibold mb-4">Billing Details</h2>
-                           
-                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium">Full Name</label>
-                                        <input
-                                            type="text"
-                                            {...register('name')}
-                                            className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
-                                        />
-                                        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
-                                    </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium">Email</label>
-                                        <input
-                                            type="email"
-                                            {...register('email')}
-                                            className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
-                                        />
-                                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-                                    </div>
+                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium">Full Name</label>
+                                    <input
+                                        type="text"
+                                        {...register('name')}
+                                        className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
+                                    />
+                                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+                                </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium">Address</label>
-                                        <input
-                                            type="text"
-                                            {...register('address')}
-                                            className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
-                                        />
-                                        {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium">Email</label>
+                                    <input
+                                        type="email"
+                                        {...register('email')}
+                                        className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
+                                    />
+                                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+                                </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium">City</label>
-                                        <input
-                                            type="text"
-                                            {...register('city')}
-                                            className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
-                                        />
-                                        {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>}
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium">Address</label>
+                                    <input
+                                        type="text"
+                                        {...register('address')}
+                                        className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
+                                    />
+                                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
+                                </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium">Postal Code</label>
-                                        <input
-                                            type="text"
-                                            {...register('postalCode')}
-                                            className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
-                                        />
-                                        {errors.postalCode && <p className="text-red-500 text-sm mt-1">{errors.postalCode.message}</p>}
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium">City</label>
+                                    <input
+                                        type="text"
+                                        {...register('city')}
+                                        className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
+                                    />
+                                    {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>}
+                                </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium">Country</label>
-                                        <input
-                                            type="text"
-                                            {...register('country')}
-                                            className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
-                                        />
-                                        {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>}
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium">Postal Code</label>
+                                    <input
+                                        type="text"
+                                        {...register('postalCode')}
+                                        className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
+                                    />
+                                    {errors.postalCode && <p className="text-red-500 text-sm mt-1">{errors.postalCode.message}</p>}
+                                </div>
 
-                                    <button
-                                        type="submit"
-                                        className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition"
-                                    >
-                                        Place Order
-                                    </button>
-                                </form>
-                            
+                                <div>
+                                    <label className="block text-sm font-medium">Country</label>
+                                    <input
+                                        type="text"
+                                        {...register('country')}
+                                        className="mt-1 p-2 block w-full border rounded-md focus:ring focus:ring-opacity-50"
+                                    />
+                                    {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>}
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition"
+                                >
+                                    Place Order
+                                </button>
+                            </form>
+
                         </div>
 
                         {/* Order Summary */}
                         <div className="order-1 md:order-2 bg-gray-50 p-4 rounded-md">
                             <h2 className="text-2xl font-semibold mb-4">Your Order</h2>
                             {isLoading ? (
-                                 Array.from({ length: 3 }).map((_, index) => (
+                                Array.from({ length: 3 }).map((_, index) => (
                                     <div key={index} className="flex justify-between items-center">
                                         <div className="flex items-center space-x-4">
                                             <Skeleton width={64} height={64} className="rounded" />
@@ -187,7 +192,7 @@ const CheckoutPage = () => {
                                                     />
                                                     <div>
                                                         <Link href={`/product/${item.product.id}`}>
-                                                        <h3 className="font-medium">{item.product.name.length > 50 ?item.product.name.substring(0,50) + "...":item.product.name}</h3>
+                                                            <h3 className="font-medium">{item.product.name.length > 50 ? item.product.name.substring(0, 50) + "..." : item.product.name}</h3>
                                                         </Link>
                                                         <p className="text-sm">Style: {productStyle.name}</p>
                                                         <p className="text-sm">Size: {item.product.size[item.sizeIdx]}</p>
@@ -211,20 +216,20 @@ const CheckoutPage = () => {
                 </div>
             </div>
             {/* Modal for Order Placed */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
-            <h3 className="text-lg font-bold">Order Placed Successfully!</h3>
-            <p className="mt-4 text-gray-600">Thank you for your purchase.</p>
-            <button
-              onClick={() => setShowModal(false)}
-              className="mt-6 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+            {showModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
+                        <h3 className="text-lg font-bold">Order Placed Successfully!</h3>
+                        <p className="mt-4 text-gray-600">Thank you for your purchase.</p>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="mt-6 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
