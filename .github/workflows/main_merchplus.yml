@@ -9,15 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      REDIS_URL: ${{ secrets.REDIS_URL }}
-      NODE_ENV: production
     steps:
       - uses: actions/checkout@v4
 
@@ -25,16 +16,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          
-      - name: Clear cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-clear
-          restore-keys: |
-            ${{ runner.os }}-node-
-          # Optional: specify cache expiration to avoid issues
-          cache-expiration: 1h 
 
       - name: npm install, build, and test
         run: |
