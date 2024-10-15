@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { getServerSession } from "next-auth/next";
 import { NEXT_AUTH_CONFIG } from "@/lib/auth";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,7 +24,7 @@ export default async function RootLayout({
        <title>Merch Plus</title>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={inter.className}>
+      <body >
        <Providers session={session}>
         {children}
        </Providers>
