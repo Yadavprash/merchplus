@@ -14,6 +14,7 @@ async function fetchProducts(): Promise<Product[]> {
     });
     return res.data.msg;
   } catch (error) {
+    console.log(error)
     throw new Error('Failed to fetch products');
   }
 }
