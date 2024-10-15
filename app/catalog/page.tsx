@@ -3,23 +3,32 @@ import { Product, Category } from "@/components/types/productType";
 import { Footer } from "@/components/footer/Footer";
 import Skeleton from 'react-loading-skeleton';
 import CatalogManager from '@/components/CatalogManager';
+import axios from 'axios';
 
 async function fetchProducts(): Promise<Product[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/products`, { next: { revalidate: 3600 } });
-  if (!res.ok) {
+  try {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/products`, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600',  // Equivalent to revalidate
+      },
+    });
+    return res.data.msg;
+  } catch (error) {
     throw new Error('Failed to fetch products');
   }
-  const data = await res.json();
-  return data.msg;
 }
 
 async function fetchCategories(): Promise<Category[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/category`, { next: { revalidate: 3600 } });
-  if (!res.ok) {
+  try {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/category`, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600',  // Equivalent to revalidate
+      },
+    });
+    return res.data.categories;
+  } catch (error) {
     throw new Error('Failed to fetch categories');
   }
-  const data = await res.json();
-  return data.categories;
 }
 
 export default async function CatalogPage() {
