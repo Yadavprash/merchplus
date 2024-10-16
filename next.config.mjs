@@ -1,4 +1,3 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
@@ -12,10 +11,7 @@ const nextConfig = {
           }
       ]
     }, 
-    reactStrictMode : true,
-    distDir : 'build',
-    output: 'standalone'
-
+    output :'standalone' 
 };
 
 export default nextConfig;
