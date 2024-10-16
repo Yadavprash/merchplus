@@ -29,22 +29,22 @@ jobs:
           node-version: '20.x'
           cache : npm
       
-      # - uses: actions/cache@v3
-      #   name: Cache Next.js build outputs
-      #   with:
-      #     path: |
-      #       ${{ github.workspace }}/.next/cache
-      #     key: |
-      #       ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '!node_modules/**') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/cache@v3
+        name: Cache Next.js build outputs
+        with:
+          path: |
+            ${{ github.workspace }}/.next/cache
+          key: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '!node_modules/**') }}-{{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
       
 
       - name: npm install, build, and test
         run: |
-          npm install -g pm2
-          npm install
-          pm2 start npm --name "merchplus" -- run dev
+          # npm install -g pm2
+          npm ci
+          # pm2 start npm --name "merchplus" -- run dev
           npm run build --if-present 
           npm run test --if-present
 
