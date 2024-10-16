@@ -42,9 +42,7 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          # npm install -g pm2
           npm ci
-          # pm2 start npm --name "merchplus" -- run dev
           npm run build --if-present 
           npm run test --if-present
 
@@ -60,7 +58,6 @@ jobs:
 
       - name : 'Moving files to standalone'
         run: |
-          pm2 delete all
           mv .next/static .next/standalone/.next/static
           mv public .next/standalone/public
 
