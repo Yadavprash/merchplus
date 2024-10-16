@@ -46,8 +46,7 @@ jobs:
           pm2 start npm --name "merchplus" -- run dev
           npm run build --if-present 
           npm run test --if-present
-          mv .next/static .next/standalone/.next/static
-          mv public .next/standalone/public
+
         env:
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -57,6 +56,12 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
           NEXT_PUBLIC_APP_URL: ${{secrets.NEXT_PUBLIC_APP_URL}}
+
+      - name : 'Moving files to standalone'
+        run: |
+          pm2 delete all
+          mv .next/static .next/standalone/.next/static
+          mv public .next/standalone/public
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
