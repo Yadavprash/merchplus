@@ -39,8 +39,6 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
       
-      - name: Clean up build cache
-        run: npm run clean
 
       - name: npm install, build, and test
         run: |
