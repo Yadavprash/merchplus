@@ -1,3 +1,4 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
@@ -10,7 +11,11 @@ const nextConfig = {
             hostname:"lh3.googleusercontent.com"
           }
       ]
-    },  
+    }, 
+    reactStrictMode : true,
+    distDir : 'build',
+    output: 'standalone'
+
 };
 
 export default nextConfig;
