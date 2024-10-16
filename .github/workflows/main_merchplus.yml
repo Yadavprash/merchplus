@@ -55,7 +55,8 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
           NEXT_PUBLIC_APP_URL: ${{secrets.NEXT_PUBLIC_APP_URL}}
-
+          NEXT_PUBLIC_AZURE_BLOB_TOKEN : ${{secrets.NEXT_PUBLIC_AZURE_BLOB_TOKEN}}
+          
       - name : 'Moving files to standalone'
         run: |
           mv .next/static .next/standalone/.next/static
