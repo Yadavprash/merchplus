@@ -6,6 +6,7 @@ import HeroSection from '@/components/HeroSection';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import NewArrivals from '@/components/NewArrival';
 import ShopByCategory from '@/components/ShopByCategory';
+import axios from 'axios';
 
 const featured = [
   "593d8f7f-3c7a-41bf-8bd0-e03c3979437e",
@@ -27,12 +28,19 @@ const newArrival = [
 ];
 
 async function fetchProducts(ids: string[]): Promise<Product[]> {
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products?ids=${ids.join(",")}`, { next: { revalidate: 3600 } });
-  if (!res.ok) {
+  try {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/products`, {
+      params: {
+        ids: ids.join(","),
+      },
+      headers: {
+        'Cache-Control': 'public, max-age=3600',  // Equivalent to revalidate
+      },
+    });
+    return res.data.msg;
+  } catch (error) {
     throw new Error('Failed to fetch products');
   }
-  const data = await res.json();
-  return data.msg;
 }
 
 

@@ -15,7 +15,7 @@ import { setCount } from '@/store/features/cartSlice';
 
 declare module "next-auth" {
   interface Session {
-    user: {
+    user: { 
       id: string;
     } & DefaultSession["user"];
   }
@@ -32,7 +32,7 @@ export default function Home() {
     const fetchCart = async () => {
       if (status === "authenticated" && session?.user?.id) {
         try {
-          const response = await axios.get(`/api/cart?userId=${session.user.id}`);
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/cart?userId=${session.user.id}`);
           setCart(response.data.cart);
         } catch (e) {
           console.error("Error fetching cart:", e);

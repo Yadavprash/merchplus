@@ -22,7 +22,7 @@ export default  function Home() {
 
     useEffect(()=>{
         const fetchCategories = async() =>{
-            const response =  await axios.get(`/api/products/category`);
+            const response =  await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/category`);
             setCategories(response.data.categories);
         }
         fetchCategories();

@@ -53,7 +53,7 @@ function HeroSection() {
           loop
           muted
         >
-          <source src="/videos/Landing.mp4" type="video/mp4" />
+          <source src="/videos/Landing2.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 

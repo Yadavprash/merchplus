@@ -45,7 +45,7 @@ export default function ProductInfo({ product, currStyle, setCurrStyle, styles, 
       return;
     }
 
-    await axios.post("/api/cart", {
+    await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/cart`, {
       userId: (session?.user as { id: string }).id,
     productId: product.id,
       quantity: 1,
@@ -61,7 +61,7 @@ export default function ProductInfo({ product, currStyle, setCurrStyle, styles, 
       return;
     }
 
-    await axios.post("/api/cart", {
+    await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/cart`, {
       userId: (session?.user as { id: string }).id,
       productId: product.id,
       quantity: 1,

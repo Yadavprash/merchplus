@@ -38,7 +38,7 @@ export const CartItem = ({
     try {
       setIsDeleting(true);
       const response = await axios.delete(
-        `/api/cart?userId=${userId}&cartItemId=${cartItemId}`
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/cart?userId=${userId}&cartItemId=${cartItemId}`
       );
       console.log("Item deleted:", response.data);
       onDelete(cartItemId);
@@ -52,7 +52,7 @@ export const CartItem = ({
   async function handleIncrement() {
     try {
       const updatedQuantity = quantity + 1;
-      const response = await axios.post(`/api/cart`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/cart`, {
         userId,
         cartItemId,
         quantity: updatedQuantity,
@@ -70,7 +70,7 @@ export const CartItem = ({
     if (quantity === 1) return; 
     try {
       const updatedQuantity = quantity - 1;
-      const response = await axios.post(`/api/cart`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/cart`, {
         userId,
         cartItemId,
         quantity: updatedQuantity,

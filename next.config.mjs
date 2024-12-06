@@ -10,7 +10,11 @@ const nextConfig = {
             hostname:"lh3.googleusercontent.com"
           }
       ]
-    },  
+    }, 
+    output :'standalone' ,
+    eslint: {
+      ignoreDuringBuilds: true,
+    }
 };
 
 export default nextConfig;

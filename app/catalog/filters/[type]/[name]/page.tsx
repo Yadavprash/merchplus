@@ -36,7 +36,7 @@ export default function Home() {
     if (filterType) {
       const fetchProducts = async () => {
         try {
-          const response = await axios.get(`/api/products/filters?${filterType}=${filterName}`);
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/filters?${filterType}=${filterName}`);
           const products = response.data.products;
           dispatch(setProducts(products));
           // console.log(products);
@@ -49,7 +49,7 @@ export default function Home() {
 
       const fetchCategories = async () => {
         try {
-          const response = await axios.get('/api/products/category');
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_URL}/api/products/category`);
           setCategories(response.data.categories);
           // console.log(response.data.categories);
         } catch (error) {
